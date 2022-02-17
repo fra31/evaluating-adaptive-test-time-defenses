@@ -1,0 +1,5 @@
+iteration: 0 (29.0 s) - best loss: -2225.079102 curr loss -2225.079102 - robust accuracy: 99.31% - step size: 0.09412
+iteration: 1 (43.5 s) - best loss: -1752.417480 curr loss -1752.417480 - robust accuracy: 99.31% - step size: 0.04738
+iteration: 2 (58.1 s) - best loss: -1696.978760 curr loss -1707.925903 - robust accuracy: 99.31% - step size: 0.04245
+iteration: 3 (72.7 s) - best loss: -1642.562378 curr loss -1658.234131 - robust accuracy: 99.31% - step size: 0.03732
+iteration: 4 (87.2 s) - best loss: -1613.874023 curr loss -1649.157837 - robust accuracy: 99.31% - step size: 0.02874

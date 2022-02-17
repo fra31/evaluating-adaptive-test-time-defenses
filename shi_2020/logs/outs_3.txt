@@ -1,0 +1,22 @@
+original points, no purification
+Files already downloaded and verified
+clean accuracy=86.1%
+
+original points, with purification
+Files already downloaded and verified
+clean accuracy=83.7%
+
+fgsm (reimpl.) without bpda
+Files already downloaded and verified
+clean accuracy=83.7%
+iteration: 0 - best loss: 401.248230 curr loss 401.248230 - robust accuracy: 20.30% - step size: 0.06275
+rob accuracy (base model)=20.3%
+purified accuracy=54.5%
+
+apgd+bpda points
+Files already downloaded and verified
+clean accuracy=83.7%
+test_points ./results/cifar10/Linf/resnet/apgd_tta_1_1000_eps_0.03137_pfyiter_5_dyn_False_loss_ce_2000x1_eot_1_niter_1000.pth
+max Linf pert: 0.03137, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+rob accuracy (base model)=4.3%
+purified accuracy=3.7%

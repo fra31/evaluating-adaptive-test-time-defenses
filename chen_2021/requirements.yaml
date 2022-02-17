@@ -1,0 +1,20 @@
+name: evaluation
+channels:
+  - pytorch
+  - defaults
+dependencies:
+  - python=3.7
+  - pip
+  - pillow
+  - yaml
+  - pyyaml
+  - protobuf
+  - absl-py
+  - cudatoolkit=10.2
+  - pytorch=1.8.1
+  - torchvision=0.9.1
+  - pip:
+    - gdown
+    - google-cloud-storage
+    - tabulate
+    - git+https://github.com/fra31/auto-attack

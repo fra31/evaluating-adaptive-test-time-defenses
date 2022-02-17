@@ -1,0 +1,40 @@
+[hd] steps=20 rand step=True
+apgd_1_1000_niter_50_loss_dlr-targeted_nrestarts_5_init_None_pursteps_5_rand_eotiter_3_best.pth
+apgd_1_1000_niter_50_loss_dlr-targeted_nrestarts_5_init_None_pursteps_0_best.pth
+defense steps=20 robust accuracy=44.9%
+defense steps=20 robust accuracy=45.0%
+defense steps=20 robust accuracy=45.5%
+defense steps=20 robust accuracy=45.6%
+defense steps=20 robust accuracy=45.1%
+defense steps=20 runs=5 robust accuracy=45.2% (0.28)
+
+
+[hd] steps=20 rand step=True
+apgd_1_1000_niter_50_loss_dlr-targeted_nrestarts_5_init_None_pursteps_5_rand_eotiter_3_best.pth
+apgd_1_1000_niter_50_loss_dlr-targeted_nrestarts_5_init_None_pursteps_0_best.pth
+[hd] steps=20 rand step=True
+apgd_1_1000_niter_50_loss_dlr-targeted_nrestarts_5_init_None_pursteps_0_best.pth
+defense steps=20 robust accuracy=54.0%
+defense steps=20 robust accuracy=54.0%
+defense steps=20 robust accuracy=54.3%
+defense steps=20 robust accuracy=54.0%
+defense steps=20 robust accuracy=54.3%
+defense steps=20 runs=5 robust accuracy=54.1% (0.15)
+
+
+[hd] steps=0 rand step=False
+apgd_1_1000_niter_50_loss_dlr-targeted_nrestarts_5_init_None_pursteps_0_best.pth
+defense steps=0 robust accuracy=45.0%
+defense steps=0 runs=1 robust accuracy=45.0% (0.00)
+
+
+[hd] steps=20 rand step=True
+apgd_1_1000_niter_50_loss_dlr-targeted_nrestarts_5_init_None_pursteps_5_rand_eotiter_3_best.pth
+defense steps=20 robust accuracy=45.6%
+defense steps=20 robust accuracy=45.9%
+defense steps=20 robust accuracy=45.9%
+defense steps=20 robust accuracy=45.7%
+defense steps=20 robust accuracy=45.8%
+defense steps=20 runs=5 robust accuracy=45.8% (0.12)
+
+

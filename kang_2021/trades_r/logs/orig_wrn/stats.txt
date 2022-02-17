@@ -1,0 +1,395 @@
+eval_fast_1_100_short
+[sodef] robust acc=83.0%
+
+
+test_points eval_fast_1_100_short.pth
+test_points eval_fast_1_100_short.pth
+[sodef] robust acc=56.0%
+
+
+eval_with_square_1_100_niter_5000_loss_margin
+[sodef] robust acc=46.0%
+
+eval_with_square_1_100_niter_20000_loss_margin
+[sodef] robust acc=48.0%
+
+eval_with_square_1_100_niter_500_loss_margin
+[sodef] robust acc=65.0%
+
+eval_with_square_1_100_niter_5000_loss_ce_nrestarts_1
+[sodef] robust acc=53.0%
+
+eval_with_square_1_100_L2_eps_0.50000_niter_5000_loss_margin_nrestarts_1
+[sodef] robust acc=1.0%
+
+eval_with_square_1_100_L2_eps_0.50000_niter_5000_loss_margin_nrestarts_1
+[sodef] robust acc=69.0%
+
+test_points_1_100_Linf_eps_0.03137 eval_with_square_1_100_L2_eps_0.50000_niter_5000_loss_margin_nrestarts_1.pth
+[sodef] robust acc=69.0%
+[sodef] robust acc=69.0%
+[sodef] robust acc=69.0%
+[sodef] robust acc=69.0%
+[sodef] robust acc=69.0%
+
+test_points_1_100_L2_eps_8.00000 eval_with_square_1_100_L2_eps_0.50000_niter_5000_loss_margin_nrestarts_1.pth
+[sodef] robust acc=73.0%
+[sodef] robust acc=71.0%
+[sodef] robust acc=72.0%
+[sodef] robust acc=72.0%
+[sodef] robust acc=70.0%
+[sodef] robust acc=71.0%
+[sodef] robust acc=72.0%
+[sodef] robust acc=72.0%
+[sodef] robust acc=73.0%
+[sodef] robust acc=71.0%
+[sodef] robust acc=70.0%
+[sodef] robust acc=70.0%
+[sodef] robust acc=70.0%
+[sodef] robust acc=70.0%
+[sodef] robust acc=69.0%
+[sodef] robust acc=69.0%
+[sodef] robust acc=68.0%
+[sodef] robust acc=68.0%
+[sodef] robust acc=70.0%
+[sodef] robust acc=69.0%
+
+test_points_1_100_L2_eps_8.00000 eval_with_square_1_100_L2_eps_0.50000_niter_5000_loss_margin_nrestarts_1.pth
+[sodef] robust acc=73.0%
+[sodef] robust acc=71.0%
+[sodef] robust acc=72.0%
+[sodef] robust acc=72.0%
+[sodef] robust acc=70.0%
+[sodef] robust acc=71.0%
+[sodef] robust acc=72.0%
+[sodef] robust acc=72.0%
+[sodef] robust acc=73.0%
+[sodef] robust acc=71.0%
+[sodef] robust acc=70.0%
+[sodef] robust acc=70.0%
+[sodef] robust acc=70.0%
+[sodef] robust acc=70.0%
+[sodef] robust acc=69.0%
+[sodef] robust acc=69.0%
+[sodef] robust acc=68.0%
+[sodef] robust acc=68.0%
+[sodef] robust acc=70.0%
+[sodef] robust acc=69.0%
+
+test_points_1_100_L2_eps_8.00000 eval_with_square_1_100_L2_eps_0.50000_niter_5000_loss_margin_nrestarts_1.pth
+[sodef] robust acc=73.0%
+[sodef] robust acc=71.0%
+[sodef] robust acc=72.0%
+[sodef] robust acc=72.0%
+[sodef] robust acc=70.0%
+[sodef] robust acc=71.0%
+[sodef] robust acc=72.0%
+[sodef] robust acc=72.0%
+[sodef] robust acc=73.0%
+[sodef] robust acc=71.0%
+[sodef] robust acc=70.0%
+[sodef] robust acc=70.0%
+[sodef] robust acc=70.0%
+[sodef] robust acc=70.0%
+[sodef] robust acc=69.0%
+[sodef] robust acc=69.0%
+[sodef] robust acc=68.0%
+[sodef] robust acc=68.0%
+[sodef] robust acc=70.0%
+[sodef] robust acc=69.0%
+
+apgd_1_100_L2_eps_0.50000_niter_25_loss_ce_nrestarts_5_init_None
+[sodef] robust acc=75.0%
+[sodef] robust acc=76.0%
+[sodef] robust acc=76.0%
+[sodef] robust acc=76.0%
+[sodef] robust acc=76.0%
+
+apgd_1_100_L2_eps_0.50000_niter_25_loss_cw_nrestarts_5_init_None
+[sodef] robust acc=73.0%
+[sodef] robust acc=74.0%
+[sodef] robust acc=74.0%
+[sodef] robust acc=73.0%
+[sodef] robust acc=73.0%
+
+apgd_1_100_L2_eps_0.50000_niter_25_loss_dlr_nrestarts_5_init_None
+[sodef] robust acc=72.0%
+[sodef] robust acc=73.0%
+[sodef] robust acc=72.0%
+[sodef] robust acc=72.0%
+[sodef] robust acc=73.0%
+
+apgd_1_100_L2_eps_0.50000_niter_25_loss_dlr-targeted_nrestarts_5_init_None
+[sodef] robust acc=67.0%
+[sodef] robust acc=68.0%
+[sodef] robust acc=67.0%
+[sodef] robust acc=68.0%
+[sodef] robust acc=68.0%
+
+apgd_1_100_L2_eps_0.50000_niter_25_loss_dlr-targeted_nrestarts_20_init_None
+[sodef] robust acc=64.0%
+[sodef] robust acc=66.0%
+[sodef] robust acc=65.0%
+[sodef] robust acc=65.0%
+[sodef] robust acc=65.0%
+
+eval_with_square_1_100_L2_eps_0.50000_niter_10000_loss_margin_nrestarts_1
+[sodef] robust acc=74.0%
+
+eval_with_square_1_100_L2_eps_0.50000_niter_10000_loss_margin_nrestarts_1.pth
+apgd_1_100_L2_eps_0.50000_niter_25_loss_dlr-targeted_nrestarts_20_init_None_best.pth
+find_wc_1_100_L2_eps_0.50000
+eval_with_square_1_100_L2_eps_0.50000_niter_10000_loss_margin_nrestarts_1.pth
+apgd_1_100_L2_eps_0.50000_niter_25_loss_dlr-targeted_nrestarts_20_init_None_best.pth
+find_wc_1_100_L2_eps_0.50000
+[sodef] robust acc=68.0%
+[sodef] robust acc=69.0%
+[sodef] robust acc=69.0%
+[sodef] robust acc=69.0%
+[sodef] robust acc=69.0%
+[sodef] robust acc=69.0%
+[sodef] robust acc=67.0%
+[sodef] robust acc=65.0%
+[sodef] robust acc=63.0%
+[sodef] robust acc=66.0%
+
+eval_with_square_1_100_L2_eps_0.50000_niter_10000_loss_margin_nrestarts_1.pth
+apgd_1_100_L2_eps_0.50000_niter_25_loss_dlr-targeted_nrestarts_20_init_None_best.pth
+find_wc_1_100_L2_eps_0.50000
+[sodef] robust acc=66.0%
+[sodef] robust acc=66.0%
+
+eval_with_square_1_100_L2_eps_0.50000_niter_10000_loss_margin_nrestarts_1.pth
+apgd_1_100_L2_eps_0.50000_niter_25_loss_dlr-targeted_nrestarts_20_init_None.pth
+find_wc_1_100_L2_eps_0.50000
+[sodef] robust acc=64.0%
+[sodef] robust acc=64.0%
+
+apgd_1_100_L2_eps_-5.00000_niter_25_loss_ce_nrestarts_1_init_None
+[sodef] robust acc=14.0%
+
+apgd_1_100_L2_eps_0.50000_niter_25_loss_ce_nrestarts_1_init_None
+[sodef] robust acc=76.0%
+
+test_points_1_10_Linf_eps_0.03137 apgd_1_100_L2_eps_0.50000_niter_25_loss_dlr-targeted_nrestarts_5_init_None_best.pth
+test_points_1_100_Linf_eps_0.03137 apgd_1_100_L2_eps_0.50000_niter_25_loss_dlr-targeted_nrestarts_5_init_None_best.pth
+test_points_1_100_Linf_eps_0.03137 apgd_1_100_L2_eps_0.50000_niter_25_loss_dlr-targeted_nrestarts_5_init_None_best.pth
+test_points_1_100_Linf_eps_0.03137 apgd_1_100_L2_eps_0.50000_niter_25_loss_dlr-targeted_nrestarts_5_init_None_best.pth
+test_points_1_100_Linf_eps_0.03137 apgd_1_100_L2_eps_0.50000_niter_25_loss_dlr-targeted_nrestarts_5_init_None_best.pth
+[sodef] robust acc=56.0%
+
+test_points_1_100_L2_eps_8.00000 apgd_1_100_L2_eps_0.50000_niter_25_loss_dlr-targeted_nrestarts_5_init_None_best.pth
+[sodef] robust acc=56.0%
+
+test_points_1_100_L2_eps_8.00000 apgd_1_100_L2_eps_0.50000_niter_25_loss_dlr-targeted_nrestarts_5_init_None_best.pth
+[sodef] robust acc=56.0%
+
+test_points_1_100_L2_eps_8.00000 apgd_1_100_L2_eps_0.50000_niter_25_loss_dlr-targeted_nrestarts_5_init_None_best.pth
+[sodef] robust acc=56.0%
+[sodef] robust acc=56.0%
+[sodef] robust acc=56.0%
+[sodef] robust acc=56.0%
+[sodef] robust acc=56.0%
+
+test_points_1_100_L2_eps_8.00000 apgd_1_100_L2_eps_0.50000_niter_25_loss_dlr-targeted_nrestarts_5_init_None.pth
+[sodef] robust acc=66.0%
+[sodef] robust acc=66.0%
+[sodef] robust acc=66.0%
+[sodef] robust acc=66.0%
+[sodef] robust acc=66.0%
+
+test_points_1_100_L2_eps_8.00000 apgd_1_100_L2_eps_0.50000_niter_25_loss_dlr-targeted_nrestarts_5_init_None_best.pth
+[sodef] robust acc=56.0%
+[sodef] robust acc=56.0%
+[sodef] robust acc=56.0%
+[sodef] robust acc=56.0%
+[sodef] robust acc=56.0%
+
+apgd_ge_1_100_L2_eps_0.50000_niter_25_loss_dlr-targeted_nrestarts_5_init_None
+[sodef] robust acc=65.0%
+
+test_points_1_200_L2_eps_0.50000 apgd_1_200_L2_eps_0.50000_niter_50_loss_ce_nrestarts_1_init_None_best.pth
+[sodef] robust acc=58.0%
+
+test_points_1_200_L2_eps_0.50000 apgd_1_200_L2_eps_0.50000_niter_50_loss_cw_nrestarts_1_init_None_best.pth
+[sodef] robust acc=56.5%
+
+test_points_1_200_L2_eps_0.50000 apgd_1_200_L2_eps_0.50000_niter_15_loss_dlr-targeted_nrestarts_4_init_None_best.pth
+[sodef] robust acc=59.0%
+
+test_points_1_200_L2_eps_0.50000 apgd_1_200_L2_eps_0.50000_niter_100_loss_dlr-targeted_nrestarts_4_init_None_best.pth
+[sodef] robust acc=60.0%
+
+test_points_1_200_L2_eps_0.50000 apgd_1_200_L2_eps_0.50000_niter_50_loss_cw_nrestarts_1_init_None.pth
+[sodef] robust acc=63.0%
+
+test_points_1_200_L2_eps_0.50000 apgd_1_200_L2_eps_0.50000_niter_50_loss_cw_nrestarts_1_init_None_best.pth
+[sodef] robust acc=56.5%
+
+test_points_1_200_L2_eps_0.50000 apgd_1_200_L2_eps_0.50000_niter_100_loss_cw_nrestarts_5_init_None_best.pth
+[sodef] robust acc=56.5%
+
+
+./results/wrn_at/apgd_1_200_L2_eps_0.50000_niter_50_loss_ce_nrestarts_1_init_None_best.pth
+./results/wrn_at/apgd_1_200_L2_eps_0.50000_niter_50_loss_cw_nrestarts_1_init_None_best.pth
+./results/wrn_at/apgd_1_200_L2_eps_0.50000_niter_100_loss_dlr-targeted_nrestarts_4_init_None_best.pth
+find_wc_1_200_L2_eps_0.50000
+[sodef] robust acc=54.5%
+
+
+./results/wrn_at/apgd_1_200_L2_eps_0.50000_niter_50_loss_ce_nrestarts_1_init_None_best.pth
+./results/wrn_at/apgd_1_200_L2_eps_0.50000_niter_50_loss_cw_nrestarts_1_init_None_best.pth
+./results/wrn_at/apgd_1_200_L2_eps_0.50000_niter_100_loss_dlr-targeted_nrestarts_4_init_None_best.pth
+find_wc_1_200_L2_eps_0.50000
+[sodef] robust acc=54.5%
+[sodef] robust acc=54.5%
+[sodef] robust acc=54.5%
+[sodef] robust acc=54.5%
+[sodef] robust acc=54.5%
+
+test_points_1_1000_L2_eps_0.50000 eval_fast_1_1000_L2_eps_0.50000.pth
+[sodef] robust acc=66.8%
+
+
+./results/wrn_at/eval_fast_1_1000_L2_eps_0.50000.pth
+./results/wrn_at/apgd_1_1000_L2_eps_0.50000_niter_100_loss_ce_nrestarts_1_init_None_best.pth
+./results/wrn_at/apgd_1_1000_L2_eps_0.50000_niter_100_loss_cw_nrestarts_1_init_None_best.pth
+./results/wrn_at/apgd_1_1000_L2_eps_0.50000_niter_100_loss_dlr-targeted_nrestarts_3_init_None_best.pth
+
+./results/wrn_at/eval_fast_1_1000_L2_eps_0.50000.pth
+./results/wrn_at/apgd_1_1000_L2_eps_0.50000_niter_100_loss_ce_nrestarts_1_init_None_best.pth
+./results/wrn_at/apgd_1_1000_L2_eps_0.50000_niter_100_loss_cw_nrestarts_1_init_None_best.pth
+./results/wrn_at/apgd_1_1000_L2_eps_0.50000_niter_100_loss_dlr-targeted_nrestarts_3_init_None_best.pth
+find_wc_1_1000_L2_eps_0.50000
+[sodef] robust acc=58.2%
+
+
+./results/wrn_at/apgd_1_1000_L2_eps_0.50000_niter_100_loss_ce_nrestarts_1_init_None_best.pth
+./results/wrn_at/apgd_1_1000_L2_eps_0.50000_niter_100_loss_cw_nrestarts_1_init_None_best.pth
+./results/wrn_at/apgd_1_1000_L2_eps_0.50000_niter_100_loss_dlr-targeted_nrestarts_3_init_None_best.pth
+find_wc_1_1000_L2_eps_0.50000
+[sodef] robust acc=58.2%
+
+
+./results/wrn_at/apgd_1_1000_L2_eps_0.50000_niter_100_loss_ce_nrestarts_1_init_None_best.pth
+./results/wrn_at/apgd_1_1000_L2_eps_0.50000_niter_100_loss_cw_nrestarts_1_init_None_best.pth
+./results/wrn_at/apgd_1_1000_L2_eps_0.50000_niter_100_loss_dlr-targeted_nrestarts_3_init_None_best.pth
+find_wc_1_1000_L2_eps_0.50000
+[sodef] robust acc=58.4%
+
+apgd_1_1000_L2_eps_0.50000_niter_25_loss_dlr-targeted_nrestarts_4_init_None
+[sodef] robust acc=72.1%
+
+apgd_1_1000_L2_eps_0.50000_niter_25_loss_dlr-targeted_nrestarts_4_init_None.pth
+./results/wrn_at/apgd_1_1000_L2_eps_0.50000_niter_100_loss_ce_nrestarts_1_init_None_best.pth
+./results/wrn_at/apgd_1_1000_L2_eps_0.50000_niter_100_loss_cw_nrestarts_1_init_None_best.pth
+./results/wrn_at/apgd_1_1000_L2_eps_0.50000_niter_100_loss_dlr-targeted_nrestarts_3_init_None_best.pth
+find_wc_1_1000_L2_eps_0.50000
+[sodef] robust acc=58.3%
+
+apgd_1_1000_L2_eps_0.50000_niter_25_loss_dlr-targeted_nrestarts_4_init_None.pth
+./results/wrn_at/apgd_1_1000_L2_eps_0.50000_niter_100_loss_ce_nrestarts_1_init_None_best.pth
+./results/wrn_at/apgd_1_1000_L2_eps_0.50000_niter_100_loss_cw_nrestarts_1_init_None_best.pth
+./results/wrn_at/apgd_1_1000_L2_eps_0.50000_niter_100_loss_dlr-targeted_nrestarts_3_init_None_best.pth
+find_wc_1_1000_L2_eps_0.50000
+[sodef] robust acc=58.3%
+
+
+./results/wrn_at/apgd_1_1000_Linf_eps_0.03137_niter_100_loss_ce_nrestarts_1_init_None_best.pth
+./results/wrn_at/apgd_1_1000_Linf_eps_0.03137_niter_100_loss_cw_nrestarts_1_init_None_best.pth
+./results/wrn_at/apgd_1_1000_Linf_eps_0.03137_niter_100_loss_dlr-targeted_nrestarts_3_init_None_best.pth
+find_wc_1_1000_Linf_eps_0.03137
+[sodef] robust acc=52.2%
+
+test_points_1_1000_Linf_eps_0.03137 eval_fast_1_1000_Linf_eps_0.03137.pth
+[sodef] robust acc=60.9%
+
+test_points_1_1000_Linf_eps_0.03137 clean points
+[sodef] robust acc=86.1%
+
+test_points_1_1000_Linf_eps_0.03137 eval_fast_1_1000_Linf_eps_0.03137.pth
+[sodef] robust acc=60.9%
+
+
+./results/wrn_at/apgd_1_1000_Linf_eps_0.03137_niter_100_loss_ce_nrestarts_1_init_None_best.pth
+./results/wrn_at/apgd_1_1000_Linf_eps_0.03137_niter_100_loss_cw_nrestarts_1_init_None_best.pth
+./results/wrn_at/apgd_1_1000_Linf_eps_0.03137_niter_100_loss_dlr-targeted_nrestarts_3_init_None_best.pth
+find_wc_1_1000_Linf_eps_0.03137
+[sodef] robust acc=52.2%
+
+test_points_1_1000_L2_eps_0.50000 eval_fast_1_1000_L2_eps_0.50000.pth
+[sodef] robust acc=66.8%
+
+
+./results/wrn_at/apgd_1_1000_L2_eps_0.50000_niter_100_loss_ce_nrestarts_1_init_None_best.pth
+./results/wrn_at/apgd_1_1000_L2_eps_0.50000_niter_100_loss_cw_nrestarts_1_init_None_best.pth
+./results/wrn_at/apgd_1_1000_L2_eps_0.50000_niter_100_loss_dlr-targeted_nrestarts_3_init_None_best.pth
+find_wc_1_1000_L2_eps_0.50000
+[sodef] robust acc=58.2%
+
+
+./results/wrn_at/apgd_1_1000_Linf_eps_0.03137_niter_100_loss_ce_nrestarts_1_init_None_best.pth
+./results/wrn_at/apgd_1_1000_Linf_eps_0.03137_niter_100_loss_cw_nrestarts_1_init_None_best.pth
+./results/wrn_at/apgd_1_1000_Linf_eps_0.03137_niter_100_loss_dlr-targeted_nrestarts_3_init_None_best.pth
+find_wc_1_1000_Linf_eps_0.03137
+max Linf pert: 0.03137, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+[sodef] robust acc=52.2%
+
+test_points_1_1000_Linf_eps_0.03137 find_wc_1_1000_Linf_eps_0.03137.pth
+max Linf pert: 0.03137, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+[sodef] robust acc=52.2%
+
+
+./results/wrn_at/apgd_1_1000_L2_eps_0.50000_niter_100_loss_ce_nrestarts_1_init_None_best.pth
+./results/wrn_at/apgd_1_1000_L2_eps_0.50000_niter_100_loss_cw_nrestarts_1_init_None_best.pth
+./results/wrn_at/apgd_1_1000_L2_eps_0.50000_niter_100_loss_dlr-targeted_nrestarts_3_init_None_best.pth
+
+./results/wrn_at/apgd_1_1000_L2_eps_0.50000_niter_100_loss_ce_nrestarts_1_init_None_best.pth
+./results/wrn_at/apgd_1_1000_L2_eps_0.50000_niter_100_loss_cw_nrestarts_1_init_None_best.pth
+./results/wrn_at/apgd_1_1000_L2_eps_0.50000_niter_100_loss_dlr-targeted_nrestarts_3_init_None_best.pth
+
+./results/wrn_at/apgd_1_1000_L2_eps_0.50000_niter_100_loss_ce_nrestarts_1_init_None_best.pth
+./results/wrn_at/apgd_1_1000_L2_eps_0.50000_niter_100_loss_cw_nrestarts_1_init_None_best.pth
+./results/wrn_at/apgd_1_1000_L2_eps_0.50000_niter_100_loss_dlr-targeted_nrestarts_3_init_None_best.pth
+find_wc_1_1000_L2_eps_0.50000
+max L2 pert: 0.50000, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+[sodef] robust acc=58.2%
+
+
+./results/wrn_at/apgd_1_1000_L2_eps_0.50000_niter_100_loss_ce_nrestarts_1_init_None_best.pth
+./results/wrn_at/apgd_1_1000_L2_eps_0.50000_niter_100_loss_cw_nrestarts_1_init_None_best.pth
+./results/wrn_at/apgd_1_1000_L2_eps_0.50000_niter_100_loss_dlr-targeted_nrestarts_3_init_None_best.pth
+find_wc_1_1000_L2_eps_0.50000
+max L2 pert: 0.50000, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+[sodef] robust acc=58.2%
+
+test_points_1_100_Linf_eps_0.03137 clean points
+max Linf pert: 0.00000, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+[sodef] robust acc=83.0%
+[sodef] robust acc=83.0%
+[sodef] robust acc=83.0%
+[sodef] robust acc=83.0%
+[sodef] robust acc=83.0%
+[sodef] robust acc=83.0%
+runs=5 single run time=0.139 s
+
+test_points_1_1000_Linf_eps_0.03137 find_wc_1_1000_Linf_eps_0.03137.pth
+max Linf pert: 0.03137, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+[sodef] robust acc=52.4%
+[sodef] robust acc=52.4%
+[sodef] robust acc=52.4%
+[sodef] robust acc=52.4%
+[sodef] robust acc=52.4%
+[sodef] robust acc=52.4%
+runs=5 single run time=1.357 s
+
+test_points_1_1000_L2_eps_8.00000 find_wc_1_1000_L2_eps_0.50000.pth
+max L2 pert: 0.50000, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+[sodef] robust acc=58.4%
+[sodef] robust acc=58.4%
+[sodef] robust acc=58.4%
+[sodef] robust acc=58.4%
+[sodef] robust acc=58.4%
+[sodef] robust acc=58.4%
+runs=5 single run time=1.315 s
+

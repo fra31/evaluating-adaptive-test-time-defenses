@@ -1,0 +1,127 @@
+purif steps=10
+purif steps=10
+purif steps=10
+eval_fast_1_128_pursteps_2_short.pth
+eval_fast_1_128_pursteps_3_short.pth
+eval_fast_1_128_pursteps_4_short.pth
+eval_fast_1_128_pursteps_5_short.pth
+eval_fast_1_128_pursteps_6_short.pth
+eval_fast_1_128_pursteps_7_short.pth
+eval_fast_1_128_pursteps_8_short.pth
+eval_fast_1_128_pursteps_9_short.pth
+wc_multiple_128_pursteps_10_new.pth
+defense steps=10 robust accuracy=24.22%
+
+
+purif steps=10
+eval_fast_1_128_pursteps_2_short.pth
+eval_fast_1_128_pursteps_3_short.pth
+eval_fast_1_128_pursteps_4_short.pth
+eval_fast_1_128_pursteps_5_short.pth
+eval_fast_1_128_pursteps_6_short.pth
+eval_fast_1_128_pursteps_7_short.pth
+eval_fast_1_128_pursteps_8_short.pth
+eval_fast_1_128_pursteps_9_short.pth
+wc_multiple_128_pursteps_10_new.pth
+wc_multiple_128_pursteps_10_2021-12-14 14:57:05
+defense steps=10 robust accuracy=24.22%
+
+
+purif steps=10
+eval_fast_1_128_pursteps_0_short.pth
+eval_fast_1_128_pursteps_1_short.pth
+eval_fast_1_128_pursteps_2_short.pth
+eval_fast_1_128_pursteps_3_short.pth
+eval_fast_1_128_pursteps_4_short.pth
+eval_fast_1_128_pursteps_5_short.pth
+eval_fast_1_128_pursteps_6_short.pth
+eval_fast_1_128_pursteps_7_short.pth
+eval_fast_1_128_pursteps_8_short.pth
+eval_fast_1_128_pursteps_9_short.pth
+eval_fast_1_128_pursteps_10_short.pth
+wc_multiple_128_pursteps_10_2021-12-14 15:01:50
+defense steps=10 robust accuracy=28.12%
+
+
+purif steps=10
+eval_fast_1_128_pursteps_0_short.pth
+eval_fast_1_128_pursteps_1_short.pth
+eval_fast_1_128_pursteps_2_short.pth
+eval_fast_1_128_pursteps_3_short.pth
+eval_fast_1_128_pursteps_4_short.pth
+eval_fast_1_128_pursteps_5_short.pth
+eval_fast_1_128_pursteps_6_short.pth
+eval_fast_1_128_pursteps_7_short.pth
+eval_fast_1_128_pursteps_8_short.pth
+eval_fast_1_128_pursteps_9_short.pth
+eval_fast_1_128_pursteps_10_short.pth
+wc_multiple_128_pursteps_10_new.pth
+wc_multiple_128_pursteps_10_2021-12-14 15:08:23
+defense steps=10 robust accuracy=24.22%
+
+
+purif steps=0
+original points
+max Linf pert: 0.00000, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+defense steps=0 robust accuracy=64.50%
+
+
+purif steps=0
+original points
+max Linf pert: 0.00000, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+defense steps=0 robust accuracy=64.50%
+
+
+purif steps=10
+original points
+max Linf pert: 0.00000, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+purif steps=10
+original points
+max Linf pert: 0.00000, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+defense steps=10 robust accuracy=87.20%
+
+
+purif steps=0
+eval_fast_1_1000_pursteps_0.pth
+max Linf pert: 0.04706, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+defense steps=0 robust accuracy=10.50%
+
+
+purif steps=10
+eval_fast_1_1000_pursteps_0.pth
+max Linf pert: 0.04706, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+defense steps=10 robust accuracy=62.00%
+
+
+purif steps=10
+eval_fast_1_1000_pursteps_10_short.pth
+max Linf pert: 0.04706, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+defense steps=10 robust accuracy=29.10%
+
+
+purif steps=10
+eval_fast_1_1000_pursteps_10_short.pth
+max Linf pert: 0.04706, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+defense steps=10 robust accuracy=29.10%
+
+
+purif steps=10
+apgd_1_1000_niter_1000_loss_ce_nrestarts_5_init_None_pursteps_10.pth
+apgd_1_1000_niter_1000_loss_dlr-targeted_nrestarts_5_init_None_pursteps_10.pth
+eval_fast_1_1000_pursteps_10_short.pth
+max Linf pert: 0.04706, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+robust accuracy=25.0%
+robust accuracy=25.0%
+robust accuracy=25.0%
+robust accuracy=25.0%
+robust accuracy=25.0%
+robust accuracy=25.0%
+robust accuracy=25.0%
+robust accuracy=25.1%
+robust accuracy=25.0%
+robust accuracy=25.0%
+wc_multiple_1000_pursteps_10_2022-01-26 15:04:33
+defense steps=10 robust accuracy=25.00%
+runs=9 single run time=57.169 s
+
+

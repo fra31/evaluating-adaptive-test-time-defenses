@@ -1,0 +1,8 @@
+no purification
+Files already downloaded and verified
+clean accuracy=86.1%
+with purification
+Files already downloaded and verified
+clean accuracy=83.7%
+rob accuracy=8.6%
+purified accuracy=7.9%

@@ -1,0 +1,165 @@
+purif steps=10
+eval_fast_1_1000_pursteps_0.pth
+eval_fast_1_1000_pursteps_1.pth
+eval_fast_1_1000_pursteps_10.pth
+purif steps=10
+eval_fast_1_1000_pursteps_0.pth
+eval_fast_1_1000_pursteps_1.pth
+eval_fast_1_1000_pursteps_10.pth
+defense steps=10 robust accuracy=43.5%
+
+
+purif steps=0
+eval_fast_1_1000_pursteps_0.pth
+defense steps=0 robust accuracy=49.3%
+
+
+purif steps=10
+eval_fast_1_1000_pursteps_0.pth
+defense steps=10 robust accuracy=55.9%
+
+
+purif steps=10
+original points
+defense steps=10 robust accuracy=89.4%
+
+
+purif steps=0
+original points
+defense steps=0 robust accuracy=89.0%
+
+
+purif steps=10
+eval_fast_1_1000_pursteps_10.pth
+defense steps=10 robust accuracy=43.6%
+
+
+purif steps=1
+eval_fast_1_1000_pursteps_1.pth
+defense steps=1 robust accuracy=48.6%
+
+
+purif steps=10
+eval_fast_1_1000_pursteps_10_short.pth
+defense steps=10 robust accuracy=43.80%
+
+
+purif steps=0
+eval_fast_1_1000_pursteps_0.pth
+defense steps=0 robust accuracy=49.30%
+
+
+purif steps=10
+eval_fast_1_1000_pursteps_0.pth
+defense steps=10 robust accuracy=56.00%
+
+
+purif steps=0
+original points
+max Linf pert: 0.00000, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+defense steps=0 robust accuracy=89.00%
+
+
+purif steps=0
+eval_fast_1_1000_pursteps_0.pth
+max Linf pert: 0.03137, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+defense steps=0 robust accuracy=49.30%
+
+
+purif steps=0
+eval_fast_1_1000_pursteps_0.pth
+max Linf pert: 0.03137, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+defense steps=0 robust accuracy=49.30%
+
+
+purif steps=10
+eval_fast_1_1000_pursteps_0.pth
+max Linf pert: 0.03137, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+defense steps=10 robust accuracy=56.00%
+
+
+purif steps=10
+eval_fast_1_1000_pursteps_10.pth
+max Linf pert: 0.03137, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+defense steps=10 robust accuracy=43.50%
+
+
+purif steps=10
+original points
+max Linf pert: 0.00000, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+defense steps=10 robust accuracy=89.30%
+
+
+purif steps=0
+original points (100)
+max Linf pert: 0.00000, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+robust accuracy={acc:.1%}
+robust accuracy={acc:.1%}
+robust accuracy={acc:.1%}
+robust accuracy={acc:.1%}
+robust accuracy={acc:.1%}
+robust accuracy={acc:.1%}
+defense steps=0 robust accuracy=91.00%
+runs=5 single run time=0.070 s
+
+
+purif steps=0
+original points (100)
+max Linf pert: 0.00000, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+robust accuracy=91.0%
+robust accuracy=91.0%
+robust accuracy=91.0%
+robust accuracy=91.0%
+robust accuracy=91.0%
+robust accuracy=91.0%
+defense steps=0 robust accuracy=91.00%
+runs=5 single run time=0.064 s
+
+
+purif steps=10
+original points (100)
+max Linf pert: 0.00000, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+robust accuracy=90.0%
+robust accuracy=90.0%
+robust accuracy=90.0%
+robust accuracy=90.0%
+robust accuracy=90.0%
+robust accuracy=90.0%
+defense steps=10 robust accuracy=90.00%
+runs=5 single run time=2.537 s
+
+
+purif steps=0
+original points (100)
+max Linf pert: 0.00000, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+robust accuracy=91.0%
+robust accuracy=91.0%
+robust accuracy=91.0%
+robust accuracy=91.0%
+robust accuracy=91.0%
+robust accuracy=91.0%
+robust accuracy=91.0%
+robust accuracy=91.0%
+robust accuracy=91.0%
+robust accuracy=91.0%
+defense steps=0 robust accuracy=91.00%
+runs=9 single run time=0.067 s
+
+
+purif steps=10
+original points (100)
+max Linf pert: 0.00000, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+robust accuracy=90.0%
+robust accuracy=90.0%
+robust accuracy=90.0%
+robust accuracy=90.0%
+robust accuracy=90.0%
+robust accuracy=90.0%
+robust accuracy=90.0%
+robust accuracy=90.0%
+robust accuracy=90.0%
+robust accuracy=90.0%
+defense steps=10 robust accuracy=90.00%
+runs=9 single run time=2.560 s
+
+

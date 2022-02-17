@@ -1,0 +1,11 @@
+__pycache__/
+*.pth
+*.pt
+results/
+outputs_s/
+adp/ncsnv2/exp/
+adp/ncsnv2/exp.zip
+*/.git
+*/.gitignore
+plots/
+outputs_l/

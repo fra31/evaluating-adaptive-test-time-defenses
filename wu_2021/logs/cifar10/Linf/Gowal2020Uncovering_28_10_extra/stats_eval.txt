@@ -1,0 +1,76 @@
+
+
+
+[hd] steps=0 rand step=False
+apgd_1_10000_niter_50_loss_dlr-targeted_nrestarts_5_init_None_pursteps_0_best.pth
+defense steps=0 robust accuracy=62.9%
+
+
+
+
+
+[hd] steps=20 rand step=True
+apgd_1_1000_niter_50_loss_dlr-targeted_nrestarts_5_init_None_pursteps_5_rand_eotiter_3_best.pth
+apgd_1_1000_niter_50_loss_dlr-targeted_nrestarts_5_init_None_pursteps_0_best.pth
+defense steps=20 robust accuracy=60.9%
+defense steps=20 robust accuracy=61.0%
+defense steps=20 robust accuracy=61.2%
+defense steps=20 robust accuracy=60.8%
+defense steps=20 robust accuracy=60.9%
+defense steps=20 runs=5 robust accuracy=61.0% (0.14)
+
+
+
+[hd] steps=20 rand step=True
+apgd_1_1000_niter_50_loss_dlr-targeted_nrestarts_5_init_None_pursteps_5_rand_eotiter_3.pth
+max Linf pert: 0.03137, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+defense steps=20 robust accuracy=62.1%
+defense steps=20 robust accuracy=61.8%
+defense steps=20 robust accuracy=62.2%
+defense steps=20 robust accuracy=62.0%
+defense steps=20 robust accuracy=62.0%
+defense steps=20 runs=5 robust accuracy=62.0% (0.13)
+
+
+[hd] steps=20 rand step=True
+apgd_1_1000_niter_50_loss_dlr-targeted_nrestarts_5_init_None_pursteps_5_rand_eotiter_3_best.pth
+max Linf pert: 0.03137, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+defense steps=20 robust accuracy=61.0%
+defense steps=20 robust accuracy=61.2%
+defense steps=20 robust accuracy=61.1%
+defense steps=20 robust accuracy=60.9%
+defense steps=20 robust accuracy=61.3%
+defense steps=20 runs=5 robust accuracy=61.1% (0.14)
+
+
+[hd] steps=20 rand step=True
+apgd_1_1000_niter_50_loss_dlr-targeted_nrestarts_5_init_None_pursteps_0_best.pth
+max Linf pert: 0.03137, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+defense steps=20 robust accuracy=66.0%
+defense steps=20 robust accuracy=65.8%
+defense steps=20 robust accuracy=65.9%
+defense steps=20 robust accuracy=66.0%
+defense steps=20 robust accuracy=65.8%
+defense steps=20 runs=5 robust accuracy=65.9% (0.09)
+
+
+# only successful points
+apgd_1_1000_niter_50_loss_dlr-targeted_nrestarts_5_init_None_pursteps_0.pth
+max Linf pert: 0.03137, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+defense steps=20 robust accuracy=69.3%
+defense steps=20 robust accuracy=69.1%
+defense steps=20 robust accuracy=69.1%
+defense steps=20 robust accuracy=69.3%
+defense steps=20 robust accuracy=69.3%
+defense steps=20 runs=5 robust accuracy=69.2% (0.10)
+
+
+
+
+
+
+
+
+
+
+

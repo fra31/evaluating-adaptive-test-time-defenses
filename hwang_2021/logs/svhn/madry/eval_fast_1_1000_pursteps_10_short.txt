@@ -1,0 +1,16 @@
+Warning: it seems to be a dynamic defense! See flags_doc.md for details.
+initial accuracy: 87.40%
+apgd-ce - 1/7 - 72 out of 128 successfully perturbed
+apgd-ce - 2/7 - 77 out of 128 successfully perturbed
+apgd-ce - 3/7 - 85 out of 128 successfully perturbed
+apgd-ce - 4/7 - 74 out of 128 successfully perturbed
+apgd-ce - 5/7 - 77 out of 128 successfully perturbed
+apgd-ce - 6/7 - 80 out of 128 successfully perturbed
+apgd-ce - 7/7 - 80 out of 106 successfully perturbed
+robust accuracy after APGD-CE: 32.90% (total time 2914.8 s)
+apgd-t - 1/3 - 23 out of 128 successfully perturbed
+apgd-t - 2/3 - 17 out of 128 successfully perturbed
+apgd-t - 3/3 - 12 out of 73 successfully perturbed
+robust accuracy after APGD-T: 27.70% (total time 12000.1 s)
+max Linf perturbation: 0.04706, nan in tensor: 0, max: 1.00000, min: 0.00000
+robust accuracy: 27.70%

@@ -1,0 +1,37 @@
+iteration: 0 - best loss: -272.688873 curr loss -272.688873 - robust accuracy: 35.56% - step size: 0.06275
+iteration: 1 - best loss: 162.121063 curr loss 162.121063 - robust accuracy: 31.11% - step size: 0.06275
+iteration: 2 - best loss: 201.403748 curr loss 201.073593 - robust accuracy: 31.11% - step size: 0.05089
+iteration: 3 - best loss: 236.850861 curr loss 234.644608 - robust accuracy: 31.11% - step size: 0.04880
+iteration: 4 - best loss: 252.242111 curr loss 246.761597 - robust accuracy: 31.11% - step size: 0.04044
+iteration: 5 - best loss: 261.098694 curr loss 251.711746 - robust accuracy: 31.11% - step size: 0.03163
+iteration: 6 - best loss: 266.640747 curr loss 254.935516 - robust accuracy: 31.11% - step size: 0.02301
+iteration: 7 - best loss: 272.379303 curr loss 259.270874 - robust accuracy: 31.11% - step size: 0.01856
+iteration: 8 - best loss: 274.201172 curr loss 255.672440 - robust accuracy: 31.11% - step size: 0.01279
+iteration: 9 - best loss: 274.964905 curr loss 255.432678 - robust accuracy: 31.11% - step size: 0.00948
+apgd_1_1000_niter_10_loss_cw_nrestarts_1_init_None_sigma_0.25_maxiter_10_eotiter_200_770-815
+bs eval=45
+max Linf pert: 0.03137, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+robust accuracy=35.6% (wc=33.3%)
+max Linf pert: 0.03137, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+robust accuracy (best loss)=28.9% (wc=20.0%)
+robust accuracy=35.6% (wc=35.6%)
+robust accuracy (best loss)=31.1% (wc=20.0%)
+robust accuracy=35.6% (wc=33.3%)
+robust accuracy (best loss)=31.1% (wc=20.0%)
+robust accuracy=35.6% (wc=33.3%)
+robust accuracy (best loss)=31.1% (wc=17.8%)
+robust accuracy=35.6% (wc=35.6%)
+robust accuracy (best loss)=28.9% (wc=17.8%)
+robust accuracy=37.8% (wc=35.6%)
+robust accuracy (best loss)=31.1% (wc=17.8%)
+robust accuracy=35.6% (wc=31.1%)
+robust accuracy (best loss)=31.1% (wc=20.0%)
+robust accuracy=35.6% (wc=35.6%)
+robust accuracy (best loss)=26.7% (wc=17.8%)
+robust accuracy=35.6% (wc=35.6%)
+robust accuracy (best loss)=31.1% (wc=20.0%)
+robust accuracy=35.6% (wc=35.6%)
+robust accuracy (best loss)=28.9% (wc=20.0%)
+[adp] eot iter=10 maxiter=10 sigma=0.25 runs=10 robust accuracy=35.8% (0.67)
+
+

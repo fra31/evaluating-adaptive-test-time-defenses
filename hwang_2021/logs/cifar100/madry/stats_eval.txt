@@ -1,0 +1,114 @@
+purif steps=20
+original points
+defense steps=20 robust accuracy=61.7%
+
+
+purif steps=0
+original points
+defense steps=0 robust accuracy=64.69%
+
+
+purif steps=10
+original points
+defense steps=10 robust accuracy=61.71%
+
+
+purif steps=10
+original points
+defense steps=10 robust accuracy=67.19%
+
+
+purif steps=20
+original points
+defense steps=20 robust accuracy=64.84%
+
+
+purif steps=20
+original points
+defense steps=20 robust accuracy=64.84%
+
+
+purif steps=10
+eval_fast_1_1000_pursteps_0.pth
+defense steps=10 robust accuracy=32.20%
+
+
+purif steps=0
+eval_fast_1_1000_pursteps_0.pth
+defense steps=0 robust accuracy=23.30%
+
+
+purif steps=10
+eval_fast_1_1000_pursteps_10_short.pth
+defense steps=10 robust accuracy=17.70%
+
+
+purif steps=10
+eval_fast_1_1000_pursteps_10_short.pth
+defense steps=10 robust accuracy=18.20%
+
+
+purif steps=0
+eval_fast_1_1000_pursteps_0.pth
+defense steps=0 robust accuracy=23.30%
+
+
+purif steps=10
+eval_fast_1_1000_pursteps_0.pth
+defense steps=10 robust accuracy=32.30%
+
+
+purif steps=10
+original points
+max Linf pert: 0.00000, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+defense steps=10 robust accuracy=59.70%
+
+
+purif steps=0
+original points
+max Linf pert: 0.00000, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+defense steps=0 robust accuracy=61.90%
+
+
+purif steps=0
+original points
+max Linf pert: 0.00000, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+defense steps=0 robust accuracy=61.90%
+
+
+purif steps=0
+original points
+max Linf pert: 0.00000, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+defense steps=0 robust accuracy=64.69%
+
+
+purif steps=0
+eval_fast_1_1000_pursteps_0.pth
+max Linf pert: 0.03137, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+defense steps=0 robust accuracy=23.30%
+
+
+purif steps=10
+eval_fast_1_1000_pursteps_0.pth
+max Linf pert: 0.03137, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+purif steps=10
+eval_fast_1_1000_pursteps_0.pth
+max Linf pert: 0.03137, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+defense steps=10 robust accuracy=32.10%
+
+
+purif steps=10
+eval_fast_1_1000_pursteps_10_short.pth
+max Linf pert: 0.03137, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+defense steps=10 robust accuracy=18.30%
+
+
+purif steps=10
+eval_fast_1_1000_pursteps_0.pth
+max Linf pert: 0.03137, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+purif steps=10
+eval_fast_1_1000_pursteps_0.pth
+max Linf pert: 0.03137, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+defense steps=10 robust accuracy=32.30%
+
+

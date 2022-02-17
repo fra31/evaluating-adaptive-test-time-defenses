@@ -1,0 +1,14 @@
+name: AID
+channels:
+  - pytorch
+  - defaults
+dependencies:
+  - cudatoolkit=9.2=0
+  - pip=21.0.1=py37h06a4308_0
+  - python=3.7.10=hdb3f193_0
+  - pytorch=1.5.1=py3.7_cuda9.2.148_cudnn7.6.3_0
+  - torchaudio=0.5.1=py37
+  - torchvision=0.6.1=py37_cu92
+  - tqdm=4.59.0=pyhd3eb1b0_1
+  - pip:
+    - foolbox==3.2.1

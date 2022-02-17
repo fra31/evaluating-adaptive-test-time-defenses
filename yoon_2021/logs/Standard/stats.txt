@@ -1,0 +1,22 @@
+test_points apgd_1_1000_niter_10_loss_cw_nrestarts_1_init_None_sigma_0.25_maxiter_10_eotiter_200_0-1000_best.pth
+bs eval=1000
+max Linf pert: 0.03137, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+robust accuracy=34.7% (wc=16.0%)
+robust accuracy=33.6% (wc=15.9%)
+robust accuracy=33.4% (wc=16.2%)
+robust accuracy=33.2% (wc=15.0%)
+robust accuracy=33.4% (wc=16.2%)
+[adp] eot iter=10 maxiter=10 sigma=0.25 runs=5 robust accuracy=33.7% (0.54) single run time=744.429 s
+
+
+test_points original points (1000)
+bs eval=1000
+max Linf pert: 0.00000, nan in imgs: 0, max in imgs: 1.00000, min in imgs: 0.00000
+robust accuracy=87.0% (wc=50.9%)
+robust accuracy=87.4% (wc=49.3%)
+robust accuracy=87.1% (wc=52.4%)
+robust accuracy=86.1% (wc=51.3%)
+robust accuracy=86.7% (wc=50.2%)
+[adp] eot iter=10 maxiter=10 sigma=0.25 runs=5 robust accuracy=86.9% (0.44) single run time=761.103 s
+
+
