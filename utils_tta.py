@@ -12,7 +12,7 @@ import autoattack
 import other_utils
 from other_utils import L2_norm, Linf_norm
 import robustbench as rb
-from aid_purifier.code_final.adaptive_opt import criterion_dict
+#from aid_purifier.code_final.adaptive_opt import criterion_dict
 
 
 def load_dataset(dataset: str, n_ex: int = 1000, device: str = 'cuda',
@@ -21,11 +21,15 @@ def load_dataset(dataset: str, n_ex: int = 1000, device: str = 'cuda',
     #device = 'cuda:0'
     if data_dir is None:
         data_dir = f'/home/scratch/datasets/{dataset.upper()}'
+        
     if dataset in ['cifar10', 'cifar100']:
         dataset_: rb.model_zoo.enums.BenchmarkDataset = rb.model_zoo.enums.BenchmarkDataset(dataset)
         #threat_model_: rb.model_zoo.enums.ThreatModel = rb.model_zoo.enums.ThreatModel(args.threat_model)
+        prepr = transforms.Compose([transforms.ToTensor()])
         
-        x_test, y_test = rb.data.load_clean_dataset(dataset_, n_ex, data_dir)
+        x_test, y_test = rb.data.load_clean_dataset(dataset_, n_ex, data_dir,
+            prepr=prepr)
+            
     elif dataset == 'svhn':
         dataset = datasets.SVHN(root=data_dir,
                                 split='test', #train=False
@@ -153,6 +157,40 @@ def eval_fast(model, x_test, y_test, norm='Linf', eps=8. / 255., savedir='./',
     other_utils.check_imgs(x_adv.to(x_test.device), x_test, norm)
 
     return x_adv
+
+
+def dlr_loss(x, y, reduction='none'):
+    x_sorted, ind_sorted = x.sort(dim=1)
+    ind = (ind_sorted[:, -1] == y).float()
+        
+    return -(x[torch.arange(x.shape[0]), y] - x_sorted[:, -2] * ind - \
+        x_sorted[:, -1] * (1. - ind)) / (x_sorted[:, -1] - x_sorted[:, -3] + 1e-12)
+
+
+def cw_loss(x, y):
+    x_sorted, ind_sorted = x.sort(dim=1)
+    ind = (ind_sorted[:, -1] == y).float()
+        
+    return -(x[torch.arange(x.shape[0]), y] - x_sorted[:, -2] * ind - \
+        x_sorted[:, -1] * (1. - ind))
+
+
+def dlr_loss_targeted(x, y, y_target):
+    x_sorted, ind_sorted = x.sort(dim=1)
+    u = torch.arange(x.shape[0])
+
+    return -(x[u, y] - x[u, y_target]) / (x_sorted[:, -1] - .5 * (
+        x_sorted[:, -3] + x_sorted[:, -4]) + 1e-12)
+
+
+criterion_dict = {'ce': lambda x, y: F.cross_entropy(x, y, reduction='none'),
+    'dlr': dlr_loss,
+    'cw': cw_loss,
+    'dlr-targeted': dlr_loss_targeted,
+    'l2': lambda x, y: -1. * L2_norm(x - y) ** 2.,
+    'l1': lambda x, y: -1. * L1_norm(x - y),
+    'linf': lambda x, y: -1. * (x - y).abs().max(-1)[0],
+    }
 
 
 def orth_projection(a, b):
