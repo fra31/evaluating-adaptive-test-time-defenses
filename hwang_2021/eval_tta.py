@@ -1,7 +1,7 @@
 import torch
 import torch.nn.functional as F
 import sys
-sys.path.append('../../')
+sys.path.append('../')
 import argparse
 from functools import partial
 import os
@@ -12,11 +12,13 @@ import time
 #import robustbench as rb
 from robustbench.utils import clean_accuracy
 import autoattack
-import other_utils
+try:
+    import other_utils
+except ImportError:
+    from autoattack import other_utils
 
-from utils_tta import load_dataset, get_logits, get_wc_acc, eval_fast, \
-    eval_maxloss, eval_with_square
-from adaptive_opt import apgd_interm_restarts, apgd_twomodels
+from utils_tta import load_dataset, get_logits, get_wc_acc, eval_fast
+from apgd_tta import apgd_restarts
 
 from functions import base_function, defense_function, utils, defense_function_new
 from functions.argparse_function import argparser_function
@@ -24,8 +26,6 @@ from functions.argparse_function import argparser_function
 
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 
-
-#
 
 @torch.enable_grad()
 def purify(x, discr, args, track_interm=False):
@@ -38,20 +38,11 @@ def purify(x, discr, args, track_interm=False):
     return x_pfy
 
 
-def full_def(x, clf, discr, args):
-    x_pfy = purify(x, discr, args, track_interm=False)
-    output = get_logits(clf, x_pfy, bs=args.batch_size)
-    return output
-
-
 def diff_full_def(x, clf, discr, args):
     z = x.clone().detach()
     with torch.no_grad():
         delta = purify(z, discr, args, track_interm=False) - z
     return clf(x + delta)
-
-
-
 
 
 def main():
@@ -70,9 +61,6 @@ def main():
     device = 'cuda'
     x_test, y_test = load_dataset(args.dataset, args.n_ex, device, args.data_dir)
     
-    
-    
-    
     if isinstance(x_init, torch.Tensor):
         ind = None
     elif not args.attack == 'loss_landscape':
@@ -81,27 +69,21 @@ def main():
     if isinstance(x_init, torch.Tensor):
         other_utils.check_imgs(x_init, x_test, args.norm)
     
-    
-    
     target_model = base_function.load_target_model(dataset=args.dataset, args=args, device=device)
     discriminator = base_function.load_discriminator(args=args, target_model=target_model, device=device)
     if args.main_classifier == 'madry' and not args.use_rand_discr:
-        discriminator.load_state_dict(torch.load(os.path.join(args.pth_path, 'purifier_models', args.dataset, args.main_classifier + '.pt'), map_location=device),
-        strict=False)
+        discriminator.load_state_dict(torch.load(os.path.join(args.pth_path, 'purifier_models',
+            args.dataset, args.main_classifier + '.pt'), map_location=device), strict=False)
     else:
         print('using discriminator with random weights')
-    #if args.discr_eval_mode
     discriminator.eval()
     if args.use_custom_discr:
         print('using not original discriminator')
     
-    aid_defense = partial(full_def, clf=target_model, discr=discriminator, args=args)
+    
     diff_aid_defense = partial(diff_full_def, clf=target_model, discr=discriminator, args=args)
-    #target_model
     
     test_model = [target_model, diff_aid_defense][0 if args.defense_step == 0 else -1]
-    
-    
     
     savedir = f'./results/{args.dataset}/{args.main_classifier}'
     other_utils.makedir(savedir)
@@ -119,18 +101,11 @@ def main():
             log_path=f'{logsdir}/{runname}.txt')
         torch.save(x_adv, f'{savedir}/{runname}.pth')    
     
-    elif args.attack in ['interm', 'interm_ge', 'apgd', 'apgd_ge']:
+    elif args.attack in ['apgd']:
         runname = f'{args.attack}_1_{args.n_ex}_niter_{args.n_iter}_loss_{args.loss}' + \
             f'_nrestarts_{args.n_restarts}_init_{args.init}_pursteps_{args.defense_step}'
-        if not ind is None and len(ind) == 1:
-            runname += f'_{ind[0]}'
-        if args.use_ls:
-            runname += '_ls'
-        if args.eot_iter > 0:
-            runname += f'_eotiter_{args.eot_iter}'
-        if not args.step_size is None:
-            runname += f'_stepsize_{args.step_size:.3f}'
-        pfy_fn = partial(purify, discr=discriminator, args=args, track_interm=True)
+        
+        #pfy_fn = partial(purify, discr=discriminator, args=args, track_interm=True)
         if isinstance(x_init, torch.Tensor):
             outputs = get_logits(test_model, x_init, bs=args.batch_size)
             pred = outputs.max(1)[1] == y_test
@@ -144,13 +119,10 @@ def main():
             x_adv = x_test.clone()
             #x_init = None
         x_best = x_adv.clone()
-        x_adv_curr, x_best_curr = apgd_interm_restarts(test_model, x_test[pred], y_test[pred],
-            use_interm='interm' in args.attack, stepsize=args.step_size,
-            n_restarts=args.n_restarts, verbose=True, n_iter=args.n_iter,
-            loss=args.loss, x_init=x_init, eps=args.eps, eot_iter=args.eot_iter,
-            norm=args.norm, use_ge='_ge' in args.attack, ge_iters=args.ge_iters,
-            ge_eta=args.ge_eta, ge_prior=args.use_prior, ge_mu=args.ge_mu,
-            pfy_fn=pfy_fn, clf=target_model, use_ls=args.use_ls, #'_ge' in args.attack
+        x_adv_curr, x_best_curr = apgd_restarts(test_model,
+            x_test[pred], y_test[pred], n_restarts=args.n_restarts,
+            verbose=True, n_iter=args.n_iter, loss=args.loss, eps=args.eps,
+            norm=args.norm, eot_iter=0,
             log_path=f'{logsdir}/{runname}.txt')
         x_adv[pred] = x_adv_curr.clone()
         x_best[pred] = x_best_curr.clone()
@@ -170,10 +142,7 @@ def main():
         logger.log(str_imgs)
     
     
-    
-    
-    
-    args.eot_test = 1 # 10 to compute runtime
+    args.eot_test = 2 # 10 to compute runtime
     for c in range(args.eot_test):
         if c == 1:
             startt = time.time()
