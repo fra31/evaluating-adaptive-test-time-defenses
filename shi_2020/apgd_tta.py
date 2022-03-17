@@ -340,34 +340,8 @@ def apgd_train(model, x, y, norm, eps, n_iter=10, use_rs=False, loss='ce',
 
 
 if __name__ == '__main__':
-    #pass
-    from train_new import parse_args
-    from data import load_anydataset
-    from utils_eval import check_imgs, load_anymodel_datasets, clean_accuracy
-
-    args = parse_args()
-    args.training_set = False
+    pass
     
-    x_test, y_test = load_anydataset(args, device='cpu')
-    x, y = x_test.cuda(), y_test.cuda()
-    model, l_models = load_anymodel_datasets(args)
-
-    assert not model.training
-
-    if args.attack == 'apgd_train':
-        #with torch.no_grad()
-        x_best, acc, _, x_adv = apgd_train(model, x, y, norm=args.norm,
-            eps=args.eps, n_iter=args.n_iter, verbose=True, loss='ce')
-        check_imgs(x_adv, x, args.norm)
-
-    elif args.attack == 'apgd_test':
-        from autoattack import AutoAttack
-        adversary = AutoAttack(model, norm=args.norm, eps=args.eps)
-        #adversary.attacks_to_run = ['apgd-ce']
-        #adversary.apgd.verbose = True
-        with torch.no_grad():
-            x_adv = adversary.run_standard_evaluation(x, y, bs=1000)
-        check_imgs(x_adv, x, args.norm)
 
 
 
