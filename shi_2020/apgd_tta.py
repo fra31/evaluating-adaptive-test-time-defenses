@@ -5,7 +5,10 @@ import math
 import random
 
 #from autopgd_base import L1_projection
-from other_utils import L1_norm, L2_norm, L0_norm
+try:
+    from other_utils import L1_norm, L2_norm, L0_norm
+except ImportError:
+    from autoattack.other_utils import L1_norm, L2_norm, L0_norm
 
 
 def L1_projection(x2, y2, eps1):
