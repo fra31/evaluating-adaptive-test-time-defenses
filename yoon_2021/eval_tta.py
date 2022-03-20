@@ -14,11 +14,13 @@ from datetime import datetime
 from robustbench.utils import load_model
 from robustbench.utils import clean_accuracy
 import autoattack
-import other_utils
-from utils_tta import load_dataset, get_logits, get_wc_acc, eval_fast, \
-    get_2D_losslandscape, clean_acc_with_eot, eval_maxloss, eval_with_square, \
-    clf_with_eot, get_wc_doubleeot
-from adaptive_opt import apgd_interm_restarts, apgd_twomodels
+try:
+    import other_utils
+except ImportError:
+    from autoattack import other_utils
+from utils_tta import load_dataset, clean_acc_with_eot
+
+from apgd_tta import apgd_restarts
 
 from ncsnv2.runners.ncsn_runner import get_model
 from purification.adp import adp
@@ -43,6 +45,7 @@ def parse_args_and_config():
     parser.add_argument('--model_dir', type=str)
     parser.add_argument('--seed', type=int)
     parser.add_argument('--batch_size', type=int, default=100)
+    parser.add_argument('--ebm_dir', type=str)
     # defense parameters
     parser.add_argument('--max_iters_def', type=int)
     parser.add_argument('--sigma_def', type=float)
@@ -152,9 +155,9 @@ def adp_defense(x, clf, ebm, config):
     x_pfy, _ = pfy(z, ebm, config)
     logits, softmaxs = clf_purified_imgs(x_pfy, clf, config)
     return softmaxs
-    
 
-""" reimplementation for custom eval """
+    
+""" reimplementation for custom eval. """
 @torch.enable_grad()
 def pfy_single(x, network_ebm, config):
     x_pur_list, step_size_list = adp(x, network_ebm, config.purification.max_iter, mode="purification", config=config)
@@ -164,12 +167,11 @@ def pfy_single(x, network_ebm, config):
 def adp_single(x, clf, ebm, config, return_interm=False):
     z = x.clone()
     x_pfy, interm_x = pfy_single(z, ebm, config)
-    #logits = get_logits(clf, x_pfy, bs=bs, track
     delta = x_pfy.detach() - x.clone().detach()
     logits = clf(x + delta)
     return logits
 
-
+    
 """ reimplementation to allow gradient prop. """
 def diff_adp(x, network_ebm, clf, config, only_pur=False):
     min_step_lr = 0.00001
@@ -221,8 +223,7 @@ def diff_adp(x, network_ebm, clf, config, only_pur=False):
 if __name__ == '__main__':
     args, config = parse_args_and_config()
     device = 'cuda'
-    #
-    #
+    
     if args.eot_def_iter is None:
         args.eot_def_iter = 10
     print(f'using defense with {args.eot_def_iter} runs')
@@ -235,8 +236,8 @@ if __name__ == '__main__':
     # custom because missing
     config.purification.rand_type = 'non-binary'
     
-    if not args.seed is None:
-        torch.manual_seed(args.seed)
+    #if not args.seed is None:
+    #    torch.manual_seed(args.seed)
     if args.eps > 1. and args.norm == 'Linf':
         args.eps /= 255.
     if not args.data_path is None:
@@ -249,18 +250,16 @@ if __name__ == '__main__':
         notes_run = f'_{args.indices}'
         ind = args.indices.split('-')
         ind_restr = list(range(int(ind[0]), int(ind[1])))
-        #
         print(ind_restr)
         sys.stdout.flush()
         x_test, y_test = x_test[ind_restr], y_test[ind_restr]
     
     # load models
-    ebm_path = './ncsnv2/exp/logs/cifar10/best_checkpoint_with_denoising.pth' #"/mnt/SHARED/fcroce42/test_time_defenses_eval/adp/ncsnv2/exp/logs/cifar10/best_checkpoint_with_denoising.pth"
-    ebm_config_path = './ncsnv2/configs/cifar10.yml'
+    ebm_path = f'{args.ebm_dir}/ncsnv2/exp/logs/cifar10/best_checkpoint_with_denoising.pth'
+    ebm_config_path = f'{args.ebm_dir}/ncsnv2/configs/cifar10.yml'
     ebm = load_ebm(ebm_path, ebm_config_path, device)
-    print(ebm.training)
     ebm.eval()
-    print(ebm.training)
+    
     
     model = load_model(args.model,
                        model_dir=args.model_dir,
@@ -271,64 +270,42 @@ if __name__ == '__main__':
     print('clf loaded')
 
     logger = other_utils.Logger(None)
-    savedir = f'./results/{args.model}' #{args.attack}_eotiter_{args.eot_def_iter}_k_{args.lng_steps}
+    savedir = f'./results/{args.model}'
     other_utils.makedir(savedir)
     logsdir = f'./logs/{args.model}'
     other_utils.makedir(logsdir)
     logger.log_path = f'{logsdir}/stats.txt'
     
-    
-
-    
     adp_fn = partial(adp_single, clf=model, ebm=ebm, config=config) # original, without eot
-    #adp_fn_multiple = partial(clf_with_eot, model=adp_fn, eot_test=args.eot_test)
     diff_adp_fn = partial(diff_adp, network_ebm=ebm, clf=model, config=config) # reimplemented in a differentiable way
-    
-    
-    
-    if args.only_clean:
-        sys.exit()
-    
-    
     
     # select which version is used in the attacks
     test_model = [adp_fn, diff_adp_fn][-1]
 
     if args.attack == 'eval_fast':
         short_version = True
-        runname = f'{args.attack}_1_{args.n_ex}_eotiter_{args.eot_test}' #pursteps_{args.defense_step} #+ '_basemodel'
+        runname = f'{args.attack}_1_{args.n_ex}_eotiter_{args.eot_test}'
         runname += f'{"_short" if short_version else ""}'
         x_adv = eval_fast(test_model, x_test, y_test, eps=args.eps,
             savedir=savedir, bs=args.batch_size, short_version=short_version,
             eot_iter=args.eot_test,
-            log_path=f'{savedir}/{runname}.txt')
+            log_path=f'{logsdir}/{runname}.txt')
         torch.save(x_adv, f'{savedir}/{runname}.pth')
         
-    elif args.attack in ['interm', 'interm_ge', 'apgd', 'apgd_ge']:
+    elif args.attack in ['apgd']:
         runname = f'{args.attack}_1_{args.n_ex}_niter_{args.n_iter}_loss_{args.loss}' + \
             f'_nrestarts_{args.n_restarts}_init_{args.init}' #_pursteps_{args.defense_step}
         runname += f'_sigma_{config.purification.rand_smoothing_level}'
         runname += f'_maxiter_{config.purification.max_iter}'
         if args.eot_test > 0:
             runname += f'_eotiter_{args.eot_test}'
-        if not args.step_size is None:
-            runname += f'_stepsize_{args.step_size:.3f}'
         if not args.indices is None:
             runname += f'_{args.indices}'
         logger.log_path = f'{logsdir}/{runname}.txt'
-        #pfy_fn = partial(purify, discr=discriminator, args=args, track_interm=True)
-        pfy_single_fn = partial(pfy_single, network_ebm=ebm, config=config)
-        x_init = None
-        if not args.data_path is None:
-            x_init = torch.load(args.data_path)
-        x_adv, x_best = apgd_interm_restarts(test_model if not '_ge' in args.attack else adp_fn_multiple,
-            model, [pfy_single_fn, diff_adp_only_fn][-1], x_test,
-            y_test, use_interm='interm' in args.attack, step_size=args.step_size,
-            n_restarts=args.n_restarts, verbose=True, n_iter=args.n_iter,
-            loss=args.loss, ebm=[None, ebm][-1], x_init=x_init, eps=args.eps,
-            norm=args.norm, use_ge='_ge' in args.attack, ge_iters=args.ge_iters,
-            ge_eta=args.ge_eta, ge_prior=args.use_prior, bpda_type=None, #args.bpda_type
-            eot_test=args.eot_test,
+        x_adv, x_best = apgd_restarts(test_model,
+            x_test, y_test, n_restarts=args.n_restarts,
+            verbose=True, n_iter=args.n_iter, loss=args.loss, eps=args.eps,
+            norm=args.norm, eot_iter=args.eot_test,
             log_path=f'{logsdir}/{runname}.txt')
         torch.save(x_adv, f'{savedir}/{runname}.pth')
         torch.save(x_best, f'{savedir}/{runname}_best.pth')
@@ -342,9 +319,8 @@ if __name__ == '__main__':
             x_adv = x_test.clone()
             
     
-            
     if False:
-        # only to compute runtime
+        # only to compute runtime of base model
         l_acc = []
         logger.log(runname)
         logger.log(f'bs eval={args.batch_size}')
@@ -365,27 +341,26 @@ if __name__ == '__main__':
     logger.log(runname)
     logger.log(f'bs eval={args.batch_size}')
     startt = time.time()
-    for c in range(min(args.eot_test, 10)):
-        acc, acc_dets = clean_acc_with_eot(adp_fn, x_adv, y_test, bs=args.batch_size,
-            eot_test=args.eot_def_iter, method='softmax', return_acc_dets=True)
+    for c in range(5):
+        acc = clean_acc_with_eot(adp_fn, x_adv, y_test, bs=args.batch_size,
+            eot_test=args.eot_def_iter, method='softmax')
         if c == 0:
             str_imgs = other_utils.check_imgs(x_adv, x_test, norm=args.norm)
             logger.log(str_imgs)
-        acc_wc = (acc_dets == args.eot_def_iter).float().mean()
-        logger.log(f'robust accuracy={acc.cpu().float().mean():.1%} (wc={acc_wc:.1%})')
+        logger.log(f'robust accuracy={acc.cpu().float().mean():.1%}')
         l_acc.append(acc.cpu().float().mean().item())
     
         try:
             # if attack returns also points with highest loss
             acc, acc_dets = clean_acc_with_eot(adp_fn, x_best, y_test, bs=args.batch_size,
-                eot_test=args.eot_def_iter, method='softmax', return_acc_dets=True)
+                eot_test=args.eot_def_iter, method='softmax')
             if c == 0:
                 str_imgs = other_utils.check_imgs(x_best, x_test, norm=args.norm)
                 logger.log(str_imgs)
-            acc_wc = (acc_dets == args.eot_def_iter).float().mean()
-            logger.log(f'robust accuracy (best loss)={acc.cpu().float().mean():.1%} (wc={acc_wc:.1%})')
+            logger.log(f'robust accuracy (best loss)={acc.cpu().float().mean():.1%}')
         except:
             pass
+    
     evalt = time.time() - startt
     logger.log(f'[adp] eot iter={args.eot_def_iter} maxiter={config.purification.max_iter}' + \
         f' sigma={config.purification.rand_smoothing_level} runs={len(l_acc)}' + \
