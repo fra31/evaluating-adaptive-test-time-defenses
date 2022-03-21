@@ -18,59 +18,12 @@ sys.path.append('../')
 import argparse
 import os
 
-from utils_tta import eval_maxloss, get_wc_acc, eval_fast, eval_with_square, \
+from utils_tta import get_wc_acc, eval_fast, \
     get_logits, get_batch, load_dataset
-from adaptive_opt import apgd_interm_restarts
+#from adaptive_opt import apgd_interm_restarts
+from apgd_tta import apgd_restarts
 
 
-
-
-'''class HedgeDefense():
-    def __init__(self, model, n_cls, eps, n_iter, stepsize):
-        assert not model.training
-        self.model = model
-        self.n_cls = n_cls
-        self.n_iter = n_iter
-        self.stepsize = stepsize
-        self.eps = eps
-        #self.loss = lambda x, y: F.cross_entropy(x, y, reduction='none')
-        self.track_grad = False
-        self.random_step = True
-    
-    @torch.enable_grad()
-    def loss_fn(self, x):
-        output = self.model(x)
-        loss = torch.zeros(x.shape[0], device=x.device)
-        u = torch.ones_like(loss).long()
-        for c in range(self.n_cls):
-            loss += F.cross_entropy(output, c * u, reduction='none')
-        
-        return loss
-
-    def __call__(self, x):
-        x_adv = x + (torch.rand_like(x) - .5) * 2. * self.eps * float(self.random_step)
-        x_adv.requires_grad_(True)
-        loss = self.loss_fn(x_adv)
-        loss_best = loss.clone().detach()
-        x_best = x_adv.clone().detach()
-        u = torch.ones_like(x)
-        for _ in range(self.n_iter):
-            with torch.enable_grad():
-                grad = torch.autograd.grad(loss.sum(), x_adv, only_inputs=True,
-                    create_graph=self.track_grad)[0]
-            #grad.detach_()
-            x_adv.detach_()
-            x_adv += self.stepsize * grad.sign().detach()
-            x_adv = x + torch.min(torch.max(x_adv - x, -self.eps * u), self.eps * u)
-            x_adv.clip_(0., 1.)
-
-            x_adv.requires_grad_(True)
-            loss = self.loss_fn(x_adv)
-            ind = loss > loss_best
-            loss_best[ind] = loss[ind].clone().detach()
-            x_best[ind] = x_adv[ind].clone().detach()
-
-        return self.model(x_best)'''
 
 
 class DiffHedgeDefense():
@@ -114,8 +67,6 @@ class DiffHedgeDefense():
         return self.model(x + delta)
 
         
-
-
 
 
 
@@ -191,7 +142,7 @@ if __name__ == '__main__':
     #runname = f'{args.attack}_1_{args.n_ex}_niter_{args.n_iter}_args
     logger = other_utils.Logger(None) #'{}/stats_eval.txt'.format(logsdir)
     
-    #hd_model = HedgeDefense(model, 10, args.eps, args.hd_iter, 4. / 255.)
+    #
     diffhd_model = DiffHedgeDefense(model, 10, args.eps, args.hd_iter,
         4. / 255., args.hd_rs)
     
@@ -205,33 +156,21 @@ if __name__ == '__main__':
             savedir=savedir, bs=args.batch_size)
         torch.save(x_adv, f'{savedir}/{runname}.pth')
 
-    elif args.attack in ['interm', 'interm_ge', 'apgd', 'apgd_ge']:
+    elif args.attack in ['apgd']:
         runname = f'{args.attack}_1_{args.n_ex}_niter_{args.n_iter}_loss_{args.loss}' + \
             f'_nrestarts_{args.n_restarts}_init_{args.init}_pursteps_{args.hd_iter}' + \
             f'{"_rand" if args.hd_rs else ""}'
-        #if not ind is None and len(ind) == 1:
-        #    runname += f'_{ind[0]}'
-        if args.use_ls:
-            runname += '_ls'
         if args.eot_iter > 0:
             runname += f'_eotiter_{args.eot_iter}'
-        if not args.step_size is None:
-            runname += f'_stepsize_{args.step_size:.3f}'
-        #pfy_fn = partial(purify, discr=discriminator, args=args, track_interm=True)
-        #x_init = None
         x_adv, x_best = [], []
         bs = args.batch_size
         for counter in range(math.ceil(x_test.shape[0] / bs)):
             x_curr, y_curr = get_batch(x_test, y_test, bs, counter, device=device)
-            x_adv_curr, x_best_curr = apgd_interm_restarts(test_model, x_curr, y_curr,
-                use_interm='interm' in args.attack, stepsize=args.step_size,
-                n_restarts=args.n_restarts, verbose=True, n_iter=args.n_iter,
-                loss=args.loss, x_init=x_init, eps=args.eps, eot_iter=args.eot_iter,
-                norm=args.norm, use_ge='_ge' in args.attack, ge_iters=args.ge_iters,
-                ge_eta=args.ge_eta, ge_prior=args.use_prior, ge_mu=args.ge_mu,
-                #pfy_fn=pfy_fn, clf=target_model,
-                use_ls=args.use_ls, #'_ge' in args.attack
-                log_path=f'{savedir}/{runname}.txt')
+            x_adv_curr, x_best_curr = apgd_restarts(test_model,
+                x_curr, y_curr, n_restarts=args.n_restarts,
+                verbose=True, n_iter=args.n_iter, loss=args.loss, eps=args.eps,
+                norm=args.norm, eot_iter=args.eot_iter,
+                log_path=f'{logsdir}/{runname}.txt')
             x_adv.append(x_adv_curr), x_best.append(x_best_curr)
         x_adv, x_best = torch.cat(x_adv, 0), torch.cat(x_best, 0)
         torch.save(x_adv, f'{savedir}/{runname}.pth')
@@ -248,23 +187,6 @@ if __name__ == '__main__':
         logger.log(f'[hd] steps={args.hd_iter} rand step={args.hd_rs}')
         logger.log(args.data_path.split('/')[-1])
         logger.log(str_imgs)
-    
-    elif args.attack == 'loss_landscape':
-        from utils_tta import get_2D_losslandscape
-        ind = [7,  16,  18]
-        x_test, y_test = x_test[ind], y_test[ind]
-        if not ind is None:
-            #ind = ind[:3]
-            ind = '-'.join([f'{c:.0f}' for c in ind])
-        print(ind)
-        if isinstance(x_init, torch.Tensor):
-            x_test = x_init
-        eta, vals = get_2D_losslandscape(test_model, x_test, y_test,
-            delta=args.eps / 10., loss=args.loss)
-        torch.save({'eta': eta, 'vals': vals}, f'{savedir}/pl_losslandscape_{ind}' + \
-            f'_pursteps_{args.defense_step}_loss_{args.loss}' + \
-            f'{"_randdiscr" if args.use_rand_discr else ""}.pth')
-        sys.exit()
     
     elif args.attack == 'find_wc':
         logger.log_path = '{}/stats_eval.txt'.format(logsdir)
@@ -289,10 +211,7 @@ if __name__ == '__main__':
     
     
     l_acc = []
-    #logger.log(runname)
-    #logger.log(str_imgs)
-    #startt = time.time()
-    for c in range(10 + 0 * int(args.hd_rs)):
+    for c in range(5):
         if c == 1:
             startt = time.time()
         acc = clean_accuracy([test_model, #hd_model
@@ -300,7 +219,10 @@ if __name__ == '__main__':
             batch_size=args.batch_size)
         logger.log(f'defense steps={args.hd_iter} robust accuracy={acc:.1%}')
         l_acc.append(acc)
-    evalt = time.time() - startt
+    try:
+        evalt = time.time() - startt
+    except:
+        evalt = 0.
     logger.log(f'defense steps={args.hd_iter} runs={len(l_acc)}' + \
         f' robust accuracy={statistics.mean(l_acc):.1%} ({statistics.pstdev(l_acc) * 100:.2f})' + \
         f' single run time={evalt / (len(l_acc) - 1):.3f} s')

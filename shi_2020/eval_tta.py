@@ -6,14 +6,15 @@ from typing import Dict, Optional, Sequence, Tuple, Union
 from functools import partial
 import time
 
-#from autoattack import AutoAttack
 import autoattack
-import other_utils
+try:
+    import other_utils
+except:
+    from autoattack import other_utils
 from torch import nn
-#from tqdm import tqdm
+
 import sys
 sys.path.append('../')
-
 
 from robustbench.utils import clean_accuracy
 from apgd_tta import apgd_train as apgd_tta
@@ -22,9 +23,6 @@ from utils_tta import load_dataset, get_logits, get_wc_acc, eval_fast
 from models import load_model
 import criterions
 from defenses import purify
-
-
-
 
 
 aux_dict = {'pi': criterions.pi_criterion}
@@ -46,6 +44,7 @@ class PurifiedModel():
             return self.model(x + delta)
         else:
             return self.model(x + delta), interm_x.permute([1, 0, 2, 3, 4])
+
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -101,9 +100,6 @@ def parse_args():
     return args
 
 
-#
-
-
 def main(args: Namespace) -> None:
     model = load_model(args.model_name,
                        save_dir=args.model_dir,
@@ -140,7 +136,7 @@ def main(args: Namespace) -> None:
     
     model_test = [model, purified_model][int(~use_basemodel)]
     
-    for _ in range(4 * int(args.dynamic) + 1):
+    for _ in range(1):
         for _ in range(1): #args.eot_test
             acc = clean_accuracy(model_test, x_test, y_test)
             print(f'clean accuracy={acc:.1%}')
@@ -185,7 +181,7 @@ def main(args: Namespace) -> None:
         print(f'[base model] nruns={args.eot_test} avg. time={evalt / args.eot_test:.3f}')
     
     # eval with base model and purification
-    for _ in range(4 * int(args.dynamic) * 0 + 1):
+    for _ in range(1):
         #x_pfy = purify(x_adv
         if not isinstance(x_adv, list):
             startt = time.time()
@@ -196,18 +192,11 @@ def main(args: Namespace) -> None:
             print(f'[model with purification] def_iters={args.pfy_iter}' + \
                 f' nruns={args.eot_test} avg. time={evalt / args.eot_test:.3f}')
     
-    
-    
-    
     if args.save_imgs:
-        if not args.data_path in ['multiple']:
-            dets = '2000x1'
-            torch.save(x_adv, f'{savedir}/{args.attack}_1_{args.n_ex}_eps_{args.eps:.5f}' +\
-                f'_pfyiter_{args.pfy_iter}_dyn_{args.dynamic}_loss_{args.loss}' +\
-                f'_{dets}_eot_{args.eot_iter}_niter_{args.n_iter}.pth')
-        else:
-            torch.save(x_adv, f'{savedir}/eval_fast_{args.data_path}.pth')
-
+        torch.save(x_adv, f'{savedir}/{args.attack}_1_{args.n_ex}_eps_{args.eps:.5f}' +\
+            f'_pfyiter_{args.pfy_iter}_dyn_{args.dynamic}_loss_{args.loss}' +\
+            f'_eot_{args.eot_iter}_niter_{args.n_iter}.pth')
+        
 
 if __name__ == '__main__':
     args_ = parse_args()

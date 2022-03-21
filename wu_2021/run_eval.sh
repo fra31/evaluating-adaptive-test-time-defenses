@@ -1,9 +1,9 @@
 #!/bin/bash
 
 data_path=' --data_dir /scratch/datasets/CIFAR10'
-n_ex=1000
-model_name='Gowal2020Uncovering_28_10_extra' #'Carmon2019Unlabeled' #'Gowal2020Uncovering_28_10_extra' #'Andriushchenko2020Understanding'
-bs=500
+n_ex=200
+model_name='Andriushchenko2020Understanding' #'Carmon2019Unlabeled' #'Gowal2020Uncovering_28_10_extra' #'Andriushchenko2020Understanding'
+bs=200
 model_dir='../../robustbench-addmodels/robustbench/models/' 
 
 

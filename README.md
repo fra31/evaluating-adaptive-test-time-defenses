@@ -1,4 +1,8 @@
-## Evaluation of adaptive test-time defenses
+# Evaluating the Adversarial Robustness of Adaptive Test-time Defenses
+Francesco Croce, Sven Gowal, Thomas Brunner, Evan Shelhamer, Matthias Hein, Taylan Cemgil \
+https://arxiv.org/abs/2202.13711
+
+## Case study
 
 We here consider the following defense:
 + `yoon_2021`: "Adversarial Purification with Score-based Generative Models",
@@ -14,4 +18,4 @@ We here consider the following defense:
 Some folders have a single Python notebook while other contain more involved code.
 As a result, some folder will contain a `run_eval.sh` file which contains the commands to run the evaluations or an explanatory `README.md` file.
 The pre-trained models have to be downloaded following the indications in the corresponding folders and papers, 
-together with the details provided in the appendix of our submission.
+together with the details provided in the appendix of our paper.

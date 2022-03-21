@@ -3,83 +3,14 @@ import torch.nn as nn
 import torch.nn.functional as F
 import math
 import random
+from typing import Tuple
+from functools import partial
+from random import shuffle
 
-#from autopgd_base import L1_projection
 try:
-    from other_utils import L1_norm, L2_norm, L0_norm
+    from other_utils import L1_norm, L2_norm, L0_norm, Logger
 except ImportError:
-    from autoattack.other_utils import L1_norm, L2_norm, L0_norm
-
-
-def L1_projection(x2, y2, eps1):
-    '''
-    x2: center of the L1 ball (bs x input_dim)
-    y2: current perturbation (x2 + y2 is the point to be projected)
-    eps1: radius of the L1 ball
-
-    output: delta s.th. ||y2 + delta||_1 = eps1
-    and 0 <= x2 + y2 + delta <= 1
-    '''
-
-    x = x2.clone().float().view(x2.shape[0], -1)
-    y = y2.clone().float().view(y2.shape[0], -1)
-    sigma = y.clone().sign()
-    u = torch.min(1 - x - y, x + y)
-    #u = torch.min(u, epsinf - torch.clone(y).abs())
-    u = torch.min(torch.zeros_like(y), u)
-    l = -torch.clone(y).abs()
-    d = u.clone()
-    
-    bs, indbs = torch.sort(-torch.cat((u, l), 1), dim=1)
-    bs2 = torch.cat((bs[:, 1:], torch.zeros(bs.shape[0], 1).to(bs.device)), 1)
-    
-    inu = 2*(indbs < u.shape[1]).float() - 1
-    size1 = inu.cumsum(dim=1)
-    
-    s1 = -u.sum(dim=1)
-    
-    c = eps1 - y.clone().abs().sum(dim=1)
-    c5 = s1 + c < 0
-    c2 = c5.nonzero().squeeze(1)
-    
-    s = s1.unsqueeze(-1) + torch.cumsum((bs2 - bs) * size1, dim=1)
-    #print(s[0])
-    
-    #print(c5.shape, c2)
-    
-    if c2.nelement != 0:
-    
-      lb = torch.zeros_like(c2).float()
-      ub = torch.ones_like(lb) *(bs.shape[1] - 1)
-      
-      #print(c2.shape, lb.shape)
-      
-      nitermax = torch.ceil(torch.log2(torch.tensor(bs.shape[1]).float()))
-      counter2 = torch.zeros_like(lb).long()
-      counter = 0
-          
-      while counter < nitermax:
-        counter4 = torch.floor((lb + ub) / 2.)
-        counter2 = counter4.type(torch.LongTensor)
-        
-        c8 = s[c2, counter2] + c[c2] < 0
-        ind3 = c8.nonzero().squeeze(1)
-        ind32 = (~c8).nonzero().squeeze(1)
-        #print(ind3.shape)
-        if ind3.nelement != 0:
-            lb[ind3] = counter4[ind3]
-        if ind32.nelement != 0:
-            ub[ind32] = counter4[ind32]
-        
-        #print(lb, ub)
-        counter += 1
-        
-      lb2 = lb.long()
-      alpha = (-s[c2, lb2] -c[c2]) / size1[c2, lb2 + 1] + bs2[c2, lb2]
-      d[c2] = -torch.min(torch.max(-u[c2], alpha.unsqueeze(-1)), -l[c2])
-    
-    return (sigma * d).view(x2.shape)
-
+    from autoattack.other_utils import L1_norm, L2_norm, L0_norm, Logger
 
 
 def dlr_loss(x, y, reduction='none'):
@@ -89,6 +20,15 @@ def dlr_loss(x, y, reduction='none'):
     return -(x[torch.arange(x.shape[0]), y] - x_sorted[:, -2] * ind - \
         x_sorted[:, -1] * (1. - ind)) / (x_sorted[:, -1] - x_sorted[:, -3] + 1e-12)
 
+
+def cw_loss(x, y):
+    x_sorted, ind_sorted = x.sort(dim=1)
+    ind = (ind_sorted[:, -1] == y).float()
+        
+    return -(x[torch.arange(x.shape[0]), y] - x_sorted[:, -2] * ind - \
+        x_sorted[:, -1] * (1. - ind))
+
+
 def dlr_loss_targeted(x, y, y_target):
     x_sorted, ind_sorted = x.sort(dim=1)
     u = torch.arange(x.shape[0])
@@ -96,28 +36,51 @@ def dlr_loss_targeted(x, y, y_target):
     return -(x[u, y] - x[u, y_target]) / (x_sorted[:, -1] - .5 * (
         x_sorted[:, -3] + x_sorted[:, -4]) + 1e-12)
 
+
 criterion_dict = {'ce': lambda x, y: F.cross_entropy(x, y, reduction='none'),
-    'dlr': dlr_loss, 'dlr-targeted': dlr_loss_targeted}
+    'dlr': dlr_loss,
+    'cw': cw_loss,
+    'dlr-targeted': dlr_loss_targeted,
+    'l2': lambda x, y: -1. * L2_norm(x - y) ** 2.,
+    'l1': lambda x, y: -1. * L1_norm(x - y),
+    'linf': lambda x, y: -1. * (x - y).abs().max(-1)[0],
+    }
+
 
 def check_oscillation(x, j, k, y5, k3=0.75):
-        t = torch.zeros(x.shape[1]).to(x.device)
-        for counter5 in range(k):
-          t += (x[j - counter5] > x[j - counter5 - 1]).float()
+    t = torch.zeros(x.shape[1]).to(x.device)
+    for counter5 in range(k):
+      t += (x[j - counter5] > x[j - counter5 - 1]).float()
 
-        return (t <= k * k3 * torch.ones_like(t)).float()
+    return (t <= k * k3 * torch.ones_like(t)).float()
 
-def apgd_train(model, x, y, norm, eps, n_iter=10, use_rs=False, loss='ce',
-    verbose=False, is_train=True, use_interm=False):
-    assert not model.training
+
+
+def apgd_train(model, x, y, norm='Linf', eps=8. / 255., n_iter=100,
+    use_rs=False, loss='ce', verbose=False, is_train=False, logger=None,
+    early_stop=True, y_target=None, eot_test=0):
+    if isinstance(model, nn.Module):
+        assert not model.training
     device = x.device
     ndims = len(x.shape) - 1
+    n_cls = 10
     
+    if logger is None:
+        logger = Logger()
+    loss_name = loss + ''
+    
+    # initialization
     if not use_rs:
         x_adv = x.clone()
     else:
-        raise NotImplemented
+        #raise NotImplemented
         if norm == 'Linf':
-            t = torch.rand_like(x)
+            t = (torch.rand_like(x) - .5) * 2. * eps
+            x_adv = (x + t).clamp(0., 1.)
+        elif norm == 'L2':
+            t = torch.randn_like(x)
+            x_adv = x + eps * t / (L2_norm(t, keepdim=True) + 1e-12)
+            x_adv.clamp_(0., 1.)
     
     x_adv = x_adv.clamp(0., 1.)
     x_best = x_adv.clone()
@@ -125,10 +88,15 @@ def apgd_train(model, x, y, norm, eps, n_iter=10, use_rs=False, loss='ce',
     loss_steps = torch.zeros([n_iter, x.shape[0]], device=device)
     loss_best_steps = torch.zeros([n_iter + 1, x.shape[0]], device=device)
     acc_steps = torch.zeros_like(loss_best_steps)
+    loss_adv = -float('inf') * torch.ones(x.shape[0], device=device)
     
     # set loss
-    criterion_indiv = criterion_dict[loss]
-
+    if not loss in ['dlr-targeted']:
+        criterion_indiv = criterion_dict[loss]
+    else:
+        assert not y_target is None
+        criterion_indiv = partial(criterion_dict[loss], y_target=y_target)
+    
     # set params
     n_fts = math.prod(x.shape[1:])
     if norm in ['Linf', 'L2']:
@@ -151,37 +119,25 @@ def apgd_train(model, x, y, norm, eps, n_iter=10, use_rs=False, loss='ce',
         device=device)
     counter3 = 0
 
-    #x_adv.requires_grad_()
-    grad = torch.zeros_like(x)
-    #for _ in range(self.eot_iter)
-    #with torch.enable_grad()
-    if not use_interm:
-        x_adv.requires_grad_()
-        logits = model(x_adv)
-        loss_indiv = criterion_indiv(logits, y)
-        loss = loss_indiv.sum()
-        #grad += torch.autograd.grad(loss, [x_adv])[0].detach()
-        grad = torch.autograd.grad(loss, [x_adv])[0].detach()
-        #grad /= float(self.eot_iter)
-        grad_best = grad.clone()
-        x_adv.detach_()
-        loss_indiv.detach_()
-        loss.detach_()
-    else:
-        logits, interm_x = model(x_adv)
-        for x_step in interm_x:
-            x_step.requires_grad_(True)
-            logits = model.model(x_step)
-            loss_indiv = criterion_indiv(logits, y)
-            loss = loss_indiv.sum()
-            grad += torch.autograd.grad(loss, [x_step])[0].detach()
-            #x_step.detach_()
-            loss_indiv.detach_()
-            loss.detach_()
-        assert not x_adv.requires_grad
-        grad /= interm_x.shape[0]
+    x_adv.requires_grad_()
+    loss_indiv = torch.zeros([x_adv.shape[0]], device=device)
+    logits = torch.zeros([x_adv.shape[0], 10], device=device)
+    grad = torch.zeros_like(x_adv)
+    for _ in range(eot_test):
+        logits_curr = model(x_adv)
+        loss_indiv_curr = criterion_indiv(logits_curr, y)
+        grad += torch.autograd.grad(loss_indiv_curr.sum(), [x_adv])[0].detach()
+        logits += F.softmax(logits_curr.detach(), 1) # softmax output is aggregated for classification
+        loss_indiv += loss_indiv_curr.detach()
+    loss_indiv /= eot_test
+    grad /= float(eot_test)
+    loss = loss_indiv.sum()
     
     grad_best = grad.clone()
+    x_adv.detach_()
+    loss_indiv.detach_()
+    loss.detach_()
+    
     acc = logits.detach().max(1)[1] == y
     acc_steps[0] = acc + 0
     loss_best = loss_indiv.detach().clone()
@@ -190,6 +146,7 @@ def apgd_train(model, x, y, norm, eps, n_iter=10, use_rs=False, loss='ce',
     n_reduced = 0
     
     u = torch.arange(x.shape[0], device=device)
+    e = torch.ones_like(x)
     x_adv_old = x_adv.clone().detach()
     
     for i in range(n_iter):
@@ -198,10 +155,11 @@ def apgd_train(model, x, y, norm, eps, n_iter=10, use_rs=False, loss='ce',
             x_adv = x_adv.detach()
             grad2 = x_adv - x_adv_old
             x_adv_old = x_adv.clone()
-            loss_curr = loss.detach().mean()
+            loss_curr = loss.detach() #.mean()
             
             a = 0.75 if i > 0 else 1.0
-
+            #a = .5 if i > 0 else 1.
+            
             if norm == 'Linf':
                 x_adv_1 = x_adv + step_size * torch.sign(grad)
                 x_adv_1 = torch.clamp(torch.min(torch.max(x_adv_1,
@@ -242,51 +200,45 @@ def apgd_train(model, x, y, norm, eps, n_iter=10, use_rs=False, loss='ce',
                 x_adv_1 = L0_projection(x_adv_1, x, eps)
                 # TODO: add momentum
                 
+            
             x_adv = x_adv_1 + 0.
 
         ### get gradient
-        if not use_interm:
-            x_adv.requires_grad_()
-            #grad = torch.zeros_like(x)
-            #for _ in range(self.eot_iter)
-            #with torch.enable_grad()
-            logits = model(x_adv)
-            loss_indiv = criterion_indiv(logits, y)
-            loss = loss_indiv.sum()
-            
-            #grad += torch.autograd.grad(loss, [x_adv])[0].detach()
-            if i < n_iter - 1:
-                # save one backward pass
-                grad = torch.autograd.grad(loss, [x_adv])[0].detach()
-            #grad /= float(self.eot_iter)
-            x_adv.detach_()
-            loss_indiv.detach_()
-            loss.detach_()
-        else:
-            logits, interm_x = model(x_adv)
-            grad = torch.zeros_like(x)
-            for x_step in interm_x:
-                x_step.requires_grad_(True)
-                logits = model.model(x_step)
-                loss_indiv = criterion_indiv(logits, y)
-                loss = loss_indiv.sum()
-                grad += torch.autograd.grad(loss, [x_step])[0].detach()
-                #x_step.detach_()
-                loss_indiv.detach_()
-                loss.detach_()
-            assert not x_adv.requires_grad
-            grad /= interm_x.shape[0]
+        x_adv.requires_grad_(True)
+        loss_indiv = torch.zeros([x_adv.shape[0]], device=device)
+        logits = torch.zeros([x_adv.shape[0], 10], device=device)
+        grad = torch.zeros_like(x_adv)
+        for _ in range(eot_test):
+            logits_curr = model(x_adv)
+            loss_indiv_curr = criterion_indiv(logits_curr, y)
+            grad += torch.autograd.grad(loss_indiv_curr.sum(), [x_adv])[0].detach()
+            logits += F.softmax(logits_curr.detach(), 1)
+            loss_indiv += loss_indiv_curr.detach()
+        loss_indiv /= eot_test
+        loss = loss_indiv.sum()
+        grad /= float(eot_test)
         
+        x_adv.detach_()
+        loss_indiv.detach_()
+        loss.detach_()
+        
+        # collect points and stats
         pred = logits.detach().max(1)[1] == y
+        acc_old = acc.clone()
         acc = torch.min(acc, pred)
         acc_steps[i + 1] = acc + 0
-        ind_pred = (pred == 0).nonzero().squeeze()
+        ind_pred = (pred == 0) * (acc_old == 1.) + (~pred) * (
+            loss_indiv.detach().clone() > loss_adv) #.nonzero().squeeze()
         x_best_adv[ind_pred] = x_adv[ind_pred] + 0.
+        loss_adv[ind_pred] = loss_indiv.detach().clone()[ind_pred]
+        
+        # logging
         if verbose:
             str_stats = ' - step size: {:.5f} - topk: {:.2f}'.format(
                 step_size.mean(), topk.mean() * n_fts) if norm in ['L1'] else ' - step size: {:.5f}'.format(
                 step_size.mean())
-            print('iteration: {} - best loss: {:.6f} curr loss {:.6f} - robust accuracy: {:.2%}{}'.format(
+            
+            logger.log('iteration: {} - best loss: {:.6f} curr loss {:.6f} - robust accuracy: {:.2%}{}'.format(
                 i, loss_best.sum(), loss_curr, acc.float().mean(), str_stats))
             #print('pert {}'.format((x - x_best_adv).abs().view(x.shape[0], -1).sum(-1).max()))
         
@@ -338,13 +290,67 @@ def apgd_train(model, x, y, norm, eps, n_iter=10, use_rs=False, loss='ce',
                   grad[fl_redtopk] = grad_best[fl_redtopk].clone()
               
                   counter3 = 0
-              
+
+        if acc.sum() == 0. and early_stop:
+            break
+    
     return x_best, acc, loss_best, x_best_adv
 
 
-if __name__ == '__main__':
-    pass
+def apgd_restarts(model, x, y, norm='Linf', eps=8. / 255., n_iter=10,
+    loss='ce', verbose=False, n_restarts=1, log_path=None, early_stop=False,
+    eot_iter=0):
+    """ run apgd with the option of restarts
+    """
+    acc = torch.ones([x.shape[0]], dtype=bool, device=x.device) # run on all points
+    x_adv = x.clone()
+    x_best = x.clone()
+    loss_best = -float('inf') * torch.ones_like(acc).float()
+    y_target = None
+    fts_target = None
+    if loss in ['dlr-targeted']:
+        with torch.no_grad():
+            output = model(x)
+        outputsorted = output.sort(-1)[1]
+        n_target_classes = 9 # max number of target classes to use
     
+    
+    for i in range(n_restarts):
+        if acc.sum() > 0:
+            if loss in ['dlr-targeted']:
+                y_target = outputsorted[:, -(i % n_target_classes + 2)]
+                y_target = y_target[acc]
+                print(f'target class {i % n_target_classes + 2}')
+            
+            x_best_curr, _, loss_curr, x_adv_curr = apgd_train(model, x[acc], y[acc],
+                n_iter=n_iter, use_rs=True, verbose=verbose, loss=loss,
+                eps=eps, norm=norm, logger=Logger(log_path), early_stop=early_stop,
+                y_target=y_target, eot_test=eot_iter)
+            
+            acc_curr = model(x_adv_curr).max(1)[1] == y[acc]
+            succs = torch.nonzero(acc).squeeze()
+            if len(succs.shape) == 0:
+                succs.unsqueeze_(0)
+            x_adv[succs[~acc_curr]] = x_adv_curr[~acc_curr].clone()
+            # old version
+            ind = succs[acc_curr * (loss_curr > loss_best[acc])]
+            x_best[ind] = x_best_curr[acc_curr * (loss_curr > loss_best[acc])].clone()
+            loss_best[ind] = loss_curr[acc_curr * (loss_curr > loss_best[acc])].clone()
+            # new version
+            '''ind = succs[loss_curr > loss_best[acc]]
+            x_best[ind] = x_best_curr[loss_curr > loss_best[acc]].clone()
+            loss_best[ind] = loss_curr[loss_curr > loss_best[acc]].clone()'''
+            
+            ind_new = torch.nonzero(acc).squeeze()
+            acc[ind_new] = acc_curr.clone()
+            
+            print(f'restart {i + 1} robust accuracy={acc.float().mean():.1%}')
+            
+    # old version
+    x_best[~acc] = x_adv[~acc].clone()
+    
+    
+    return x_adv, x_best
 
 
 
