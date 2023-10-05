@@ -9,7 +9,7 @@ pandas==0.24.2
 pathlib2==2.3.2
 pdbpp==0.10.2
 pep8==1.7.1
-Pillow==5.4.1
+Pillow==10.0.1
 pkginfo==1.4.2
 protobuf==3.8.0
 protobuf3-to-dict==0.1.5
